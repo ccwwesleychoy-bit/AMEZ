@@ -44,10 +44,19 @@
   let lastCartTrigger = null;
   let lastCheckoutTrigger = null;
 
+  function isFocusableVisible(el) {
+    if (!el || el.tabIndex < 0) return false;
+    if (el.hasAttribute("disabled") || el.getAttribute("aria-hidden") === "true") return false;
+    // Do not use offsetParent — it is null for many descendants of transformed
+    // ancestors (e.g. Tailwind translate on the cart drawer), which hid every
+    // control from focus trapping and first-focus on iOS / Safari / Chrome.
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
+
   function getFocusable(root) {
     if (!root) return [];
-    return Array.from(root.querySelectorAll(focusableSelector))
-      .filter((el) => el.tabIndex >= 0 && (el.offsetParent !== null || el === document.activeElement));
+    return Array.from(root.querySelectorAll(focusableSelector)).filter(isFocusableVisible);
   }
 
   function focusFirst(root) {
@@ -222,14 +231,14 @@
             <p class="font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${t(p.subKey)}</p>
             <div class="flex items-center justify-between mt-3.5 gap-4">
               <div class="flex items-center gap-3 shrink-0">
-                <button onclick="AMEZ.changeQty('${id}', -1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${t(p.nameKey)} quantity">−</button>
+                <button type="button" data-cart-act="dec" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${t(p.nameKey)} quantity">−</button>
                 <span class="text-sm w-5 text-center tabular-nums price" aria-live="polite">${qty}</span>
-                <button onclick="AMEZ.changeQty('${id}', 1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${t(p.nameKey)} quantity">+</button>
+                <button type="button" data-cart-act="inc" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${t(p.nameKey)} quantity">+</button>
               </div>
               <span class="text-sm tracking-wider price text-brown ml-4">${money(lineTotal)}</span>
             </div>
           </div>
-          <button onclick="AMEZ.removeFromCart('${id}')" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${t("remove")} ${t(p.nameKey)}">${t("remove")}</button>
+          <button type="button" data-cart-act="rm" data-cart-id="${id}" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${t("remove")} ${t(p.nameKey)}">${t("remove")}</button>
         </div>`;
     });
     container.innerHTML = html;
@@ -239,6 +248,7 @@
   function openCart() {
     const drawer = $("cart-drawer");
     const overlay = $("cart-overlay");
+    if (!drawer || !overlay) return;
     lastCartTrigger = document.activeElement;
     drawer.classList.remove("translate-x-full");
     overlay.classList.remove("hidden");
@@ -249,6 +259,7 @@
   function closeCart(restore = true) {
     const drawer = $("cart-drawer");
     const overlay = $("cart-overlay");
+    if (!drawer || !overlay) return;
     drawer.classList.add("translate-x-full");
     overlay.classList.add("hidden");
     setCartExpanded(false);
@@ -598,15 +609,33 @@
     if (backdrop) backdrop.addEventListener("click", closeCheckout);
 
     document.addEventListener("keydown", (e) => {
+      const drawer = $("cart-drawer");
+      const cartOpen = drawer && !drawer.classList.contains("translate-x-full");
       if (e.key === "Escape") {
         if (document.body.classList.contains("checkout-open")) closeCheckout();
-        else if (!$("cart-drawer").classList.contains("translate-x-full")) closeCart();
-      } else if (document.body.classList.contains("checkout-open")) {
+        else if (cartOpen) closeCart();
+        return;
+      }
+      if (document.body.classList.contains("checkout-open")) {
         trapFocus(e, $("checkout-modal"));
-      } else if (!$("cart-drawer").classList.contains("translate-x-full")) {
-        trapFocus(e, $("cart-drawer"));
+      } else if (cartOpen) {
+        trapFocus(e, drawer);
       }
     });
+
+    const cartItemsRoot = $("cart-items");
+    if (cartItemsRoot) {
+      cartItemsRoot.addEventListener("click", (ev) => {
+        const btn = ev.target.closest("[data-cart-act]");
+        if (!btn || !cartItemsRoot.contains(btn)) return;
+        const id = btn.getAttribute("data-cart-id");
+        if (!id) return;
+        const act = btn.getAttribute("data-cart-act");
+        if (act === "dec") changeQty(id, -1);
+        else if (act === "inc") changeQty(id, 1);
+        else if (act === "rm") removeFromCart(id);
+      });
+    }
 
     const checkoutBtn = $("btn-checkout");
     if (checkoutBtn) checkoutBtn.addEventListener("click", openCheckout);
