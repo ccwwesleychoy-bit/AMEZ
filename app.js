@@ -32,6 +32,12 @@
   };
 
   const $ = (id) => document.getElementById(id);
+  /** i18n: use this instead of t() so cart still works if Cloudflare Rocket Loader runs app.js before i18n.js. */
+  function tr(key) {
+    if (typeof t === "function") return t(key);
+    if (typeof STR !== "undefined" && STR.en && STR.en[key] !== undefined) return STR.en[key];
+    return key;
+  }
   const money = (n) => currency + Number(n || 0).toFixed(0);
   const focusableSelector = [
     "a[href]",
@@ -109,7 +115,7 @@
     if (!note) return;
     const sub = subtotal();
     if (sub > 0 && sub < freeAtAmount) {
-      note.textContent = (t("chkFreeShipNote") || "").replace("{amt}", money(freeAtAmount - sub));
+      note.textContent = (tr("chkFreeShipNote") || "").replace("{amt}", money(freeAtAmount - sub));
       note.classList.remove("hidden");
     } else {
       note.textContent = "";
@@ -187,7 +193,7 @@
 
     if (totalEl) totalEl.textContent = money(grand);
     if (subEl)   subEl.textContent   = money(sub);
-    if (shipEl)  shipEl.textContent  = sub === 0 ? "—" : (ship === 0 ? t("shipFree") : money(ship));
+    if (shipEl)  shipEl.textContent  = sub === 0 ? "—" : (ship === 0 ? tr("shipFree") : money(ship));
 
     // Free shipping progress
     if (progress && progFill && progText) {
@@ -195,11 +201,11 @@
         const pct = Math.min(100, Math.round((sub / freeAtAmount) * 100));
         progFill.style.width = pct + "%";
         const remaining = freeAtAmount - sub;
-        progText.textContent = (t("shipAway") || "").replace("{amt}", money(remaining));
+        progText.textContent = (tr("shipAway") || "").replace("{amt}", money(remaining));
         progress.classList.remove("hidden");
       } else if (sub >= freeAtAmount) {
         progFill.style.width = "100%";
-        progText.textContent = t("shipUnlocked");
+        progText.textContent = tr("shipUnlocked");
         progress.classList.remove("hidden");
       } else {
         progress.classList.add("hidden");
@@ -213,7 +219,7 @@
     if (keys.length === 0) {
       container.innerHTML = `
         <div class="py-16 text-center">
-          <p class="font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light">${t("cartEmpty")}</p>
+          <p class="font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light">${tr("cartEmpty")}</p>
         </div>`;
       return;
     }
@@ -227,18 +233,18 @@
         <div class="flex items-start gap-4 py-5 border-b border-cream-border last:border-b-0">
           <img src="${p.image}" alt="" width="80" height="80" decoding="async" class="w-20 h-20 object-contain bg-cream-dark p-1.5 shrink-0" />
           <div class="flex-1 min-w-0">
-            <p class="font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown">${t(p.nameKey)}</p>
-            <p class="font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${t(p.subKey)}</p>
+            <p class="font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown">${tr(p.nameKey)}</p>
+            <p class="font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${tr(p.subKey)}</p>
             <div class="flex items-center justify-between mt-3.5 gap-4">
               <div class="flex items-center gap-3 shrink-0">
-                <button type="button" data-cart-act="dec" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${t(p.nameKey)} quantity">−</button>
+                <button type="button" data-cart-act="dec" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${tr(p.nameKey)} quantity">−</button>
                 <span class="text-sm w-5 text-center tabular-nums price" aria-live="polite">${qty}</span>
-                <button type="button" data-cart-act="inc" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${t(p.nameKey)} quantity">+</button>
+                <button type="button" data-cart-act="inc" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${tr(p.nameKey)} quantity">+</button>
               </div>
               <span class="text-sm tracking-wider price text-brown ml-4">${money(lineTotal)}</span>
             </div>
           </div>
-          <button type="button" data-cart-act="rm" data-cart-id="${id}" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${t("remove")} ${t(p.nameKey)}">${t("remove")}</button>
+          <button type="button" data-cart-act="rm" data-cart-id="${id}" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${tr("remove")} ${tr(p.nameKey)}">${tr("remove")}</button>
         </div>`;
     });
     container.innerHTML = html;
@@ -289,7 +295,7 @@
     Object.keys(state.cart).forEach((id) => {
       const p   = PRODUCTS[id];
       const qty = state.cart[id];
-      const nm  = isZh ? t(p.nameKey) : (STR.en[p.nameKey] || p.nameKey);
+      const nm  = isZh ? tr(p.nameKey) : ((typeof STR !== "undefined" && STR.en && STR.en[p.nameKey]) || p.nameKey);
       items += `${nm} × ${qty}  @ ${money(p.price)}  = ${money(p.price * qty)}\n`;
     });
     let out = "";
@@ -329,7 +335,7 @@
     const submitBtn = $("btn-submit-order");
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = t("formSubmit");
+      submitBtn.textContent = tr("formSubmit");
     }
     const form = $("form-order");
     if (form) form.reset();
@@ -380,7 +386,7 @@
   function flashCopied(btn) {
     const orig = btn.dataset.origText || btn.textContent;
     btn.dataset.origText = orig;
-    btn.textContent = t("copied");
+    btn.textContent = tr("copied");
     setTimeout(() => { btn.textContent = orig; }, 900);
   }
 
@@ -455,12 +461,12 @@
       if (err) { err.textContent = ""; err.classList.add("hidden"); }
       const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
       if (file.type && !allowedTypes.includes(file.type)) {
-        if (err) { err.textContent = t("errImageType"); err.classList.remove("hidden"); }
+        if (err) { err.textContent = tr("errImageType"); err.classList.remove("hidden"); }
         input.value = "";
         return;
       }
       if (file.size > 12 * 1024 * 1024) {
-        if (err) { err.textContent = t("errImageBig"); err.classList.remove("hidden"); }
+        if (err) { err.textContent = tr("errImageBig"); err.classList.remove("hidden"); }
         input.value = "";
         return;
       }
@@ -474,7 +480,7 @@
         if (clear) clear.classList.remove("hidden");
         if (fnEl) { fnEl.textContent = name; fnEl.classList.remove("hidden"); }
       } catch (_) {
-        if (err) { err.textContent = t("errImageRead"); err.classList.remove("hidden"); }
+        if (err) { err.textContent = tr("errImageRead"); err.classList.remove("hidden"); }
         input.value = "";
       }
     });
@@ -490,7 +496,7 @@
     setSubmitStatus("");
 
     if (!cfg.orderEndpoint) {
-      setSubmitStatus(t("errSubmit"));
+      setSubmitStatus(tr("errSubmit"));
       return;
     }
 
@@ -498,8 +504,8 @@
     if (honeypot && honeypot.value) return;
 
     if (!state.paymentProof || !state.paymentProof.base64) {
-      if (err) { err.textContent = t("errNeedProof"); err.classList.remove("hidden"); try { err.scrollIntoView({behavior:"smooth",block:"nearest"}); } catch(_) {} }
-      setSubmitStatus(t("errNeedProof"));
+      if (err) { err.textContent = tr("errNeedProof"); err.classList.remove("hidden"); try { err.scrollIntoView({behavior:"smooth",block:"nearest"}); } catch(_) {} }
+      setSubmitStatus(tr("errNeedProof"));
       return;
     }
 
@@ -509,7 +515,7 @@
     state.submitting = true;
     const btn = $("btn-submit-order");
     const oldTxt = btn ? btn.textContent : "";
-    if (btn) { btn.disabled = true; btn.textContent = t("formSending"); }
+    if (btn) { btn.disabled = true; btn.textContent = tr("formSending"); }
 
     const phone = (form.querySelector('[name="phone"]') || {}).value || "";
     const payload = {
@@ -549,9 +555,9 @@
     } catch (e) {
       if (timeout) clearTimeout(timeout);
       console.error("Order submit failed:", e);
-      setSubmitStatus(t("errSubmit"));
-      if (btn) { btn.disabled = false; btn.textContent = t("formFailed"); }
-      setTimeout(() => { if (btn) btn.textContent = oldTxt || t("formSubmit"); }, 1400);
+      setSubmitStatus(tr("errSubmit"));
+      if (btn) { btn.disabled = false; btn.textContent = tr("formFailed"); }
+      setTimeout(() => { if (btn) btn.textContent = oldTxt || tr("formSubmit"); }, 1400);
     } finally {
       state.submitting = false;
     }

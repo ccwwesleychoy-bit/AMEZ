@@ -1038,8 +1038,9 @@
     </div>
   </div>
 
-  <script src="config.js"></script>
-  <script src="i18n.js"></script>
-  <script src="app.js"></script>
+  <!-- data-cfasync="false" keeps execution order under Cloudflare Rocket Loader (otherwise app.js can run before i18n.js and break the cart). -->
+  <script data-cfasync="false" src="config.js"></script>
+  <script data-cfasync="false" src="i18n.js"></script>
+  <script data-cfasync="false" src="app.js"></script>
 </body>
 </html>
