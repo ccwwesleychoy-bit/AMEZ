@@ -38,6 +38,14 @@
     if (typeof STR !== "undefined" && STR.en && STR.en[key] !== undefined) return STR.en[key];
     return key;
   }
+  /** Safe for innerHTML / attributes (e.g. "Fruity & Floral" breaks parsing if left raw). */
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
   const money = (n) => currency + Number(n || 0).toFixed(0);
   const focusableSelector = [
     "a[href]",
@@ -219,7 +227,7 @@
     if (keys.length === 0) {
       container.innerHTML = `
         <div class="py-16 text-center">
-          <p class="font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light">${tr("cartEmpty")}</p>
+          <p class="font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light">${escapeHtml(tr("cartEmpty"))}</p>
         </div>`;
       return;
     }
@@ -228,23 +236,27 @@
     keys.forEach((id) => {
       const p   = PRODUCTS[id];
       const qty = state.cart[id];
+      if (!p || !qty) return;
       const lineTotal = p.price * qty;
+      const nameEsc = escapeHtml(tr(p.nameKey));
+      const subEsc = escapeHtml(tr(p.subKey));
+      const rmEsc = escapeHtml(tr("remove"));
       html += `
         <div class="flex items-start gap-4 py-5 border-b border-cream-border last:border-b-0">
           <img src="${p.image}" alt="" width="80" height="80" decoding="async" class="w-20 h-20 object-contain bg-cream-dark p-1.5 shrink-0" />
           <div class="flex-1 min-w-0">
-            <p class="font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown">${tr(p.nameKey)}</p>
-            <p class="font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${tr(p.subKey)}</p>
+            <p class="font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown">${nameEsc}</p>
+            <p class="font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${subEsc}</p>
             <div class="flex items-center justify-between mt-3.5 gap-4">
               <div class="flex items-center gap-3 shrink-0">
-                <button type="button" data-cart-act="dec" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${tr(p.nameKey)} quantity">−</button>
+                <button type="button" data-cart-act="dec" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${nameEsc} quantity">−</button>
                 <span class="text-sm w-5 text-center tabular-nums price" aria-live="polite">${qty}</span>
-                <button type="button" data-cart-act="inc" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${tr(p.nameKey)} quantity">+</button>
+                <button type="button" data-cart-act="inc" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${nameEsc} quantity">+</button>
               </div>
               <span class="text-sm tracking-wider price text-brown ml-4">${money(lineTotal)}</span>
             </div>
           </div>
-          <button type="button" data-cart-act="rm" data-cart-id="${id}" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${tr("remove")} ${tr(p.nameKey)}">${tr("remove")}</button>
+          <button type="button" data-cart-act="rm" data-cart-id="${id}" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${rmEsc} ${nameEsc}">${rmEsc}</button>
         </div>`;
     });
     container.innerHTML = html;
