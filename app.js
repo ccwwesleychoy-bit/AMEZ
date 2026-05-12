@@ -4,7 +4,8 @@
 
   const cfg = window.SHOP_CONFIG || {};
   const currency = cfg.currencyLabel || "HK$";
-  const freeAtAmount = Number(cfg.freeShippingAtAmount || 240);
+  const rawFree = Number(cfg.freeShippingAtAmount || 240);
+  const freeAtAmount = Number.isFinite(rawFree) && rawFree > 0 ? rawFree : 240;
   const shipFee = Number(cfg.shippingFee || 30);
 
   const PRODUCTS = {
@@ -37,14 +38,6 @@
     if (typeof t === "function") return t(key);
     if (typeof STR !== "undefined" && STR.en && STR.en[key] !== undefined) return STR.en[key];
     return key;
-  }
-  /** Safe for innerHTML / attributes (e.g. "Fruity & Floral" breaks parsing if left raw). */
-  function escapeHtml(s) {
-    return String(s ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
   }
   const money = (n) => currency + Number(n || 0).toFixed(0);
   const focusableSelector = [
@@ -132,21 +125,39 @@
   }
 
   // ---------- CART MATH ----------
-  function subtotal() {
-    return Object.keys(state.cart).reduce((s, id) => {
+  function pruneCart() {
+    Object.keys(state.cart).forEach((id) => {
       const p = PRODUCTS[id];
-      return p ? s + p.price * state.cart[id] : s;
-    }, 0);
+      const q = Number(state.cart[id]);
+      if (!p || !Number.isFinite(q) || q < 1) delete state.cart[id];
+    });
+  }
+  function subtotal() {
+    let s = 0;
+    Object.keys(state.cart).forEach((id) => {
+      const p = PRODUCTS[id];
+      const q = Number(state.cart[id]);
+      if (p && Number.isFinite(q) && q > 0 && Number.isFinite(p.price)) s += p.price * q;
+    });
+    return s;
   }
   function shipping(sub) {
-    return sub === 0 ? 0 : sub >= freeAtAmount ? 0 : shipFee;
+    const s = Number(sub) || 0;
+    if (s <= 0) return 0;
+    return s >= freeAtAmount ? 0 : shipFee;
   }
   function grandTotal() {
     const sub = subtotal();
     return sub + shipping(sub);
   }
   function totalUnits() {
-    return Object.values(state.cart).reduce((a, b) => a + b, 0);
+    let n = 0;
+    Object.keys(state.cart).forEach((id) => {
+      const p = PRODUCTS[id];
+      const q = Number(state.cart[id]);
+      if (p && Number.isFinite(q) && q > 0) n += q;
+    });
+    return n;
   }
 
   // ---------- CART OPS ----------
@@ -167,6 +178,7 @@
   }
 
   function syncAll() {
+    pruneCart();
     updateCartCount();
     renderCart();
   }
@@ -194,7 +206,12 @@
     const progText  = $("cart-progress-text");
     const checkoutBtn = $("btn-checkout");
 
-    const keys = Object.keys(state.cart);
+    const lineKeys = Object.keys(state.cart).filter((id) => {
+      const p = PRODUCTS[id];
+      const q = Number(state.cart[id]);
+      return Boolean(p && Number.isFinite(q) && q > 0);
+    });
+
     const sub  = subtotal();
     const ship = shipping(sub);
     const grand = sub + ship;
@@ -220,46 +237,109 @@
       }
     }
 
-    if (checkoutBtn) checkoutBtn.disabled = keys.length === 0;
+    if (checkoutBtn) checkoutBtn.disabled = lineKeys.length === 0;
 
     if (!container) return;
 
-    if (keys.length === 0) {
-      container.innerHTML = `
-        <div class="py-16 text-center">
-          <p class="font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light">${escapeHtml(tr("cartEmpty"))}</p>
-        </div>`;
+    if (lineKeys.length === 0) {
+      const wrap = document.createElement("div");
+      wrap.className = "py-16 text-center";
+      const pEl = document.createElement("p");
+      pEl.className = "font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light";
+      pEl.textContent = tr("cartEmpty");
+      wrap.appendChild(pEl);
+      container.replaceChildren(wrap);
       return;
     }
 
-    let html = "";
-    keys.forEach((id) => {
-      const p   = PRODUCTS[id];
-      const qty = state.cart[id];
-      if (!p || !qty) return;
+    const frag = document.createDocumentFragment();
+    lineKeys.forEach((id) => {
+      const p = PRODUCTS[id];
+      const qty = Number(state.cart[id]);
+      if (!p || !(qty > 0)) return;
       const lineTotal = p.price * qty;
-      const nameEsc = escapeHtml(tr(p.nameKey));
-      const subEsc = escapeHtml(tr(p.subKey));
-      const rmEsc = escapeHtml(tr("remove"));
-      html += `
-        <div class="flex items-start gap-4 py-5 border-b border-cream-border last:border-b-0">
-          <img src="${p.image}" alt="" width="80" height="80" decoding="async" class="w-20 h-20 object-contain bg-cream-dark p-1.5 shrink-0" />
-          <div class="flex-1 min-w-0">
-            <p class="font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown">${nameEsc}</p>
-            <p class="font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${subEsc}</p>
-            <div class="flex items-center justify-between mt-3.5 gap-4">
-              <div class="flex items-center gap-3 shrink-0">
-                <button type="button" data-cart-act="dec" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${nameEsc} quantity">−</button>
-                <span class="text-sm w-5 text-center tabular-nums price" aria-live="polite">${qty}</span>
-                <button type="button" data-cart-act="inc" data-cart-id="${id}" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${nameEsc} quantity">+</button>
-              </div>
-              <span class="text-sm tracking-wider price text-brown ml-4">${money(lineTotal)}</span>
-            </div>
-          </div>
-          <button type="button" data-cart-act="rm" data-cart-id="${id}" class="font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${rmEsc} ${nameEsc}">${rmEsc}</button>
-        </div>`;
+      const nameText = tr(p.nameKey);
+      const subText = tr(p.subKey);
+
+      const row = document.createElement("div");
+      row.className = "flex items-start gap-4 py-5 border-b border-cream-border last:border-b-0";
+
+      const img = document.createElement("img");
+      img.src = p.image;
+      img.alt = "";
+      img.width = 80;
+      img.height = 80;
+      img.decoding = "async";
+      img.className = "w-20 h-20 object-contain bg-cream-dark p-1.5 shrink-0";
+
+      const mid = document.createElement("div");
+      mid.className = "flex-1 min-w-0";
+
+      const nameP = document.createElement("p");
+      nameP.className = "font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown";
+      nameP.textContent = nameText;
+
+      const subP = document.createElement("p");
+      subP.className = "font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1";
+      subP.textContent = subText;
+
+      const rowCtrl = document.createElement("div");
+      rowCtrl.className = "flex items-center justify-between mt-3.5 gap-4";
+
+      const qtyWrap = document.createElement("div");
+      qtyWrap.className = "flex items-center gap-3 shrink-0";
+
+      const btnDec = document.createElement("button");
+      btnDec.type = "button";
+      btnDec.dataset.cartAct = "dec";
+      btnDec.dataset.cartId = id;
+      btnDec.className =
+        "w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm";
+      btnDec.setAttribute("aria-label", "Decrease " + nameText + " quantity");
+      btnDec.textContent = "−";
+
+      const qtySpan = document.createElement("span");
+      qtySpan.className = "text-sm w-5 text-center tabular-nums price";
+      qtySpan.setAttribute("aria-live", "polite");
+      qtySpan.textContent = String(qty);
+
+      const btnInc = document.createElement("button");
+      btnInc.type = "button";
+      btnInc.dataset.cartAct = "inc";
+      btnInc.dataset.cartId = id;
+      btnInc.className = btnDec.className;
+      btnInc.setAttribute("aria-label", "Increase " + nameText + " quantity");
+      btnInc.textContent = "+";
+
+      const priceSpan = document.createElement("span");
+      priceSpan.className = "text-sm tracking-wider price text-brown ml-4";
+      priceSpan.textContent = money(lineTotal);
+
+      qtyWrap.appendChild(btnDec);
+      qtyWrap.appendChild(qtySpan);
+      qtyWrap.appendChild(btnInc);
+      rowCtrl.appendChild(qtyWrap);
+      rowCtrl.appendChild(priceSpan);
+
+      mid.appendChild(nameP);
+      mid.appendChild(subP);
+      mid.appendChild(rowCtrl);
+
+      const btnRm = document.createElement("button");
+      btnRm.type = "button";
+      btnRm.dataset.cartAct = "rm";
+      btnRm.dataset.cartId = id;
+      btnRm.className =
+        "font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0";
+      btnRm.setAttribute("aria-label", tr("remove") + " " + nameText);
+      btnRm.textContent = tr("remove");
+
+      row.appendChild(img);
+      row.appendChild(mid);
+      row.appendChild(btnRm);
+      frag.appendChild(row);
     });
-    container.innerHTML = html;
+    container.replaceChildren(frag);
   }
 
   // ---------- DRAWER OPEN / CLOSE ----------
@@ -306,7 +386,8 @@
     let items = "";
     Object.keys(state.cart).forEach((id) => {
       const p   = PRODUCTS[id];
-      const qty = state.cart[id];
+      const qty = Number(state.cart[id]);
+      if (!p || !(qty > 0)) return;
       const nm  = isZh ? tr(p.nameKey) : ((typeof STR !== "undefined" && STR.en && STR.en[p.nameKey]) || p.nameKey);
       items += `${nm} × ${qty}  @ ${money(p.price)}  = ${money(p.price * qty)}\n`;
     });
@@ -325,7 +406,7 @@
 
   // ---------- CHECKOUT OPEN / CLOSE ----------
   function openCheckout() {
-    if (Object.keys(state.cart).length === 0) return;
+    if (subtotal() === 0) return;
     lastCheckoutTrigger = document.activeElement;
     state.orderId = genOrderId();
     state.paymentProof = null;

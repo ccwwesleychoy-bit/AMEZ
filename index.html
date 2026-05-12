@@ -676,13 +676,13 @@
   <div id="cart-overlay" class="fixed inset-0 bg-brown/20 z-40 hidden" aria-hidden="true"></div>
 
   <!-- CART DRAWER -->
-  <aside id="cart-drawer" class="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-cream z-50 translate-x-full flex flex-col shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
+    <aside id="cart-drawer" class="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-cream z-50 translate-x-full flex flex-col min-h-0 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
     <div class="flex items-center justify-between px-8 py-6 border-b border-cream-border">
       <h2 id="cart-title" class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTitle">Your Cart</h2>
       <button onclick="AMEZ.closeCart()" class="text-xs tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose" aria-label="Close cart">Close</button>
     </div>
 
-    <div id="cart-items" class="flex-1 min-h-0 overflow-y-auto px-8 py-2" aria-live="polite"></div>
+    <div id="cart-items" class="flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden px-8 py-2" aria-live="polite"></div>
 
     <div class="px-8 py-6 border-t border-cream-border">
 
