@@ -32,6 +32,37 @@
     paymentProof: null,  // { base64, mime, name, previewUrl }
   };
 
+  const CART_STORAGE_KEY = "amez-cart-v1";
+
+  function loadPersistedCart() {
+    try {
+      const raw = localStorage.getItem(CART_STORAGE_KEY);
+      if (!raw || raw.length > 4000) return;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return;
+      const next = {};
+      Object.keys(parsed).forEach((id) => {
+        if (!PRODUCTS[id]) return;
+        const q = Math.floor(Number(parsed[id]));
+        if (Number.isFinite(q) && q > 0 && q <= 99) next[id] = q;
+      });
+      state.cart = next;
+    } catch (_) {}
+  }
+
+  function persistCart() {
+    try {
+      const slim = {};
+      Object.keys(state.cart).forEach((id) => {
+        const p = PRODUCTS[id];
+        const q = Math.floor(Number(state.cart[id]));
+        if (p && Number.isFinite(q) && q > 0 && q <= 99) slim[id] = q;
+      });
+      if (Object.keys(slim).length === 0) localStorage.removeItem(CART_STORAGE_KEY);
+      else localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(slim));
+    } catch (_) {}
+  }
+
   const $ = (id) => document.getElementById(id);
   /** i18n: use this instead of t() so cart still works if Cloudflare Rocket Loader runs app.js before i18n.js. */
   function tr(key) {
@@ -181,6 +212,7 @@
     pruneCart();
     updateCartCount();
     renderCart();
+    persistCart();
   }
 
   function updateCartCount() {
@@ -696,6 +728,8 @@
 
   // ---------- INIT ----------
   function init() {
+    loadPersistedCart();
+
     // Bind close buttons / overlays via event delegation
     const overlay = $("cart-overlay");
     if (overlay) overlay.addEventListener("click", closeCart);
@@ -766,6 +800,7 @@
     // Apply locale before cart/contact sync: setLang runs before window.AMEZ exists, so it skips
     // renderCart/renderContact there; renderContactInfo + syncAll pick up currentLang from i18n.js.
     if (typeof window.setLang === "function") window.setLang(initialLang);
+    else console.warn("[AMEZ] i18n.js did not define setLang — check that i18n.js uploaded correctly (UTF-8, binary/FTP binary) and hard-refresh.");
 
     renderContactInfo();
     syncAll();
