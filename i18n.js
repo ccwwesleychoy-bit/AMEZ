@@ -198,23 +198,41 @@ const STR = {
 
 let currentLang = "en";
 
+function normalizeLang(lang) {
+  if (lang === "zh-Hant" || lang === "zh-TW" || lang === "zh-HK" || lang === "zh") return "zh-Hant";
+  return "en";
+}
+
 function t(key) {
-  const val = STR[currentLang][key];
+  if (!key) return "";
+  const pack = STR[currentLang] || STR.en;
+  const val = pack[key];
   if (val !== undefined) return val;
-  return STR["en"][key] || key;
+  return STR.en[key] || key;
 }
 
 function setLang(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang === "zh-Hant" ? "zh-Hant" : "en";
+  const L = normalizeLang(lang);
+  if (!STR[L]) return;
+  currentLang = L;
+  document.documentElement.lang = L === "zh-Hant" ? "zh-Hant" : "en";
+  try {
+    localStorage.setItem("amez-lang", L);
+  } catch (_) {}
+
   document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const val = t(el.dataset.i18n);
+    const key = el.getAttribute("data-i18n");
+    const val = t(key);
     el.textContent = val;
     el.style.visibility = val === "" ? "hidden" : "";
   });
   document.querySelectorAll(".lang-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.lang === lang);
+    const btnLang = normalizeLang(btn.getAttribute("data-lang") || "");
+    btn.classList.toggle("active", btnLang === L);
   });
   if (window.AMEZ && window.AMEZ.renderCart)    window.AMEZ.renderCart();
   if (window.AMEZ && window.AMEZ.renderContact) window.AMEZ.renderContact();
 }
+
+window.setLang = setLang;
+window.t = t;

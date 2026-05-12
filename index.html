@@ -430,6 +430,124 @@
       font-size: 16px;
     }
 
+    /* Cart lines are built in app.js — Play CDN does not scan app.js, so Tailwind
+       utilities there would not generate CSS. These rules make rows always visible. */
+    #cart-items .amez-cart-line {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid #D9D0C1;
+      color: #2C2416;
+    }
+    #cart-items .amez-cart-line:last-child {
+      border-bottom: none;
+    }
+    #cart-items .amez-cart-img {
+      width: 5rem;
+      height: 5rem;
+      object-fit: contain;
+      flex-shrink: 0;
+      padding: 0.375rem;
+      background: #EDE8DF;
+      box-sizing: border-box;
+    }
+    #cart-items .amez-cart-main {
+      flex: 1;
+      min-width: 0;
+    }
+    #cart-items .amez-cart-title {
+      font-size: 0.875rem;
+      line-height: 1.35;
+      letter-spacing: 0.04em;
+      margin: 0;
+    }
+    #cart-items .amez-cart-meta {
+      margin: 0.375rem 0 0;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #A08060;
+    }
+    #cart-items .amez-cart-actions {
+      margin-top: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    #cart-items .amez-cart-qtyrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    #cart-items .amez-qty-btn {
+      width: 1.75rem;
+      height: 1.75rem;
+      border: 1px solid #D9D0C1;
+      color: #6B5540;
+      background: transparent;
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+    }
+    #cart-items .amez-qty-btn:hover {
+      border-color: #2C2416;
+      color: #2C2416;
+    }
+    #cart-items .amez-cart-qty {
+      font-size: 0.875rem;
+      width: 1.25rem;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    #cart-items .amez-cart-lineprice {
+      font-size: 0.875rem;
+      letter-spacing: 0.06em;
+      color: #2C2416;
+      margin-left: 1rem;
+    }
+    #cart-items .amez-cart-remove {
+      margin-top: 0.125rem;
+      flex-shrink: 0;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #C4B89E;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    #cart-items .amez-cart-remove:hover {
+      color: #2C2416;
+    }
+    #cart-items .amez-cart-empty {
+      padding: 4rem 0;
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #A08060;
+    }
+    html[lang="zh-Hant"] #cart-items .amez-cart-title,
+    html[lang="zh-Hant"] #cart-items .amez-cart-meta,
+    html[lang="zh-Hant"] #cart-items .amez-cart-remove,
+    html[lang="zh-Hant"] #cart-items .amez-cart-empty {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 300;
+    }
+    html[lang="en"] #cart-items .amez-cart-title,
+    html[lang="en"] #cart-items .amez-cart-meta,
+    html[lang="en"] #cart-items .amez-cart-remove,
+    html[lang="en"] #cart-items .amez-cart-empty {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+    }
+
     /* Narrow-phone Add to Cart — let letter-spacing breathe */
     @media (max-width: 400px) {
       #shop article button {
@@ -730,9 +848,9 @@
       <!-- Language switcher + Cart -->
       <div class="flex items-center gap-3 md:gap-6">
         <div class="flex items-center gap-2">
-          <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+          <button type="button" class="lang-btn active" data-lang="en">EN</button>
           <span class="text-brown-pale text-xs select-none">/</span>
-          <button class="lang-btn" data-lang="zh-Hant" onclick="setLang('zh-Hant')">中文</button>
+          <button type="button" class="lang-btn" data-lang="zh-Hant">中文</button>
         </div>
         <button id="btn-cart" onclick="AMEZ.openCart()" class="relative flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" aria-label="Open cart" aria-haspopup="dialog" aria-controls="cart-drawer" aria-expanded="false">
           <svg width="17" height="19" viewBox="0 0 17 19" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">

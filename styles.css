@@ -229,6 +229,123 @@ header nav button[aria-label="Cart"] {
   font-size: 16px;
 }
 
+/* Cart lines from app.js — Play CDN does not scan app.js for Tailwind classes */
+#cart-items .amez-cart-line {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #D9D0C1;
+  color: #2C2416;
+}
+#cart-items .amez-cart-line:last-child {
+  border-bottom: none;
+}
+#cart-items .amez-cart-img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+  padding: 0.375rem;
+  background: #ede8df;
+  box-sizing: border-box;
+}
+#cart-items .amez-cart-main {
+  flex: 1;
+  min-width: 0;
+}
+#cart-items .amez-cart-title {
+  font-size: 0.875rem;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+#cart-items .amez-cart-meta {
+  margin: 0.375rem 0 0;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #a08060;
+}
+#cart-items .amez-cart-actions {
+  margin-top: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+#cart-items .amez-cart-qtyrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+#cart-items .amez-qty-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid #d9d0c1;
+  color: #6b5540;
+  background: transparent;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+#cart-items .amez-qty-btn:hover {
+  border-color: #2c2416;
+  color: #2c2416;
+}
+#cart-items .amez-cart-qty {
+  font-size: 0.875rem;
+  width: 1.25rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+#cart-items .amez-cart-lineprice {
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  color: #2c2416;
+  margin-left: 1rem;
+}
+#cart-items .amez-cart-remove {
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #c4b89e;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+#cart-items .amez-cart-remove:hover {
+  color: #2c2416;
+}
+#cart-items .amez-cart-empty {
+  padding: 4rem 0;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #a08060;
+}
+html[lang="zh-Hant"] #cart-items .amez-cart-title,
+html[lang="zh-Hant"] #cart-items .amez-cart-meta,
+html[lang="zh-Hant"] #cart-items .amez-cart-remove,
+html[lang="zh-Hant"] #cart-items .amez-cart-empty {
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-weight: 300;
+}
+html[lang="en"] #cart-items .amez-cart-title,
+html[lang="en"] #cart-items .amez-cart-meta,
+html[lang="en"] #cart-items .amez-cart-remove,
+html[lang="en"] #cart-items .amez-cart-empty {
+  font-family: Raleway, ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+}
+
 /* Add-to-cart buttons — on very narrow screens, let text wrap gracefully
    instead of bleeding out of the button */
 @media (max-width: 400px) {

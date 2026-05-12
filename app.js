@@ -242,13 +242,10 @@
     if (!container) return;
 
     if (lineKeys.length === 0) {
-      const wrap = document.createElement("div");
-      wrap.className = "py-16 text-center";
       const pEl = document.createElement("p");
-      pEl.className = "font-zh-sans text-xs tracking-[0.28em] uppercase text-brown-light";
+      pEl.className = "amez-cart-empty";
       pEl.textContent = tr("cartEmpty");
-      wrap.appendChild(pEl);
-      container.replaceChildren(wrap);
+      container.replaceChildren(pEl);
       return;
     }
 
@@ -262,7 +259,7 @@
       const subText = tr(p.subKey);
 
       const row = document.createElement("div");
-      row.className = "flex items-start gap-4 py-5 border-b border-cream-border last:border-b-0";
+      row.className = "amez-cart-line";
 
       const img = document.createElement("img");
       img.src = p.image;
@@ -270,36 +267,35 @@
       img.width = 80;
       img.height = 80;
       img.decoding = "async";
-      img.className = "w-20 h-20 object-contain bg-cream-dark p-1.5 shrink-0";
+      img.className = "amez-cart-img";
 
       const mid = document.createElement("div");
-      mid.className = "flex-1 min-w-0";
+      mid.className = "amez-cart-main";
 
       const nameP = document.createElement("p");
-      nameP.className = "font-zh-sans text-sm tracking-[0.04em] leading-snug text-brown";
+      nameP.className = "amez-cart-title";
       nameP.textContent = nameText;
 
       const subP = document.createElement("p");
-      subP.className = "font-zh-sans text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1";
+      subP.className = "amez-cart-meta";
       subP.textContent = subText;
 
       const rowCtrl = document.createElement("div");
-      rowCtrl.className = "flex items-center justify-between mt-3.5 gap-4";
+      rowCtrl.className = "amez-cart-actions";
 
       const qtyWrap = document.createElement("div");
-      qtyWrap.className = "flex items-center gap-3 shrink-0";
+      qtyWrap.className = "amez-cart-qtyrow";
 
       const btnDec = document.createElement("button");
       btnDec.type = "button";
       btnDec.dataset.cartAct = "dec";
       btnDec.dataset.cartId = id;
-      btnDec.className =
-        "w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm";
+      btnDec.className = "amez-qty-btn";
       btnDec.setAttribute("aria-label", "Decrease " + nameText + " quantity");
       btnDec.textContent = "−";
 
       const qtySpan = document.createElement("span");
-      qtySpan.className = "text-sm w-5 text-center tabular-nums price";
+      qtySpan.className = "amez-cart-qty";
       qtySpan.setAttribute("aria-live", "polite");
       qtySpan.textContent = String(qty);
 
@@ -307,12 +303,12 @@
       btnInc.type = "button";
       btnInc.dataset.cartAct = "inc";
       btnInc.dataset.cartId = id;
-      btnInc.className = btnDec.className;
+      btnInc.className = "amez-qty-btn";
       btnInc.setAttribute("aria-label", "Increase " + nameText + " quantity");
       btnInc.textContent = "+";
 
       const priceSpan = document.createElement("span");
-      priceSpan.className = "text-sm tracking-wider price text-brown ml-4";
+      priceSpan.className = "amez-cart-lineprice";
       priceSpan.textContent = money(lineTotal);
 
       qtyWrap.appendChild(btnDec);
@@ -329,8 +325,7 @@
       btnRm.type = "button";
       btnRm.dataset.cartAct = "rm";
       btnRm.dataset.cartId = id;
-      btnRm.className =
-        "font-zh-sans text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0";
+      btnRm.className = "amez-cart-remove";
       btnRm.setAttribute("aria-label", tr("remove") + " " + nameText);
       btnRm.textContent = tr("remove");
 
@@ -755,10 +750,25 @@
     const form = $("form-order");
     if (form) form.addEventListener("submit", submitOrder);
 
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const lang = btn.getAttribute("data-lang");
+        if (lang && typeof window.setLang === "function") window.setLang(lang);
+      });
+    });
+
+    let initialLang = "en";
+    try {
+      const s = localStorage.getItem("amez-lang");
+      if (s === "zh-Hant" || s === "en") initialLang = s;
+    } catch (_) {}
+    // Apply locale before cart/contact sync: setLang runs before window.AMEZ exists, so it skips
+    // renderCart/renderContact there; renderContactInfo + syncAll pick up currentLang from i18n.js.
+    if (typeof window.setLang === "function") window.setLang(initialLang);
+
     renderContactInfo();
     syncAll();
-    // Apply initial language (from i18n.js)
-    if (typeof setLang === "function") setLang("en");
   }
 
   // Public API
