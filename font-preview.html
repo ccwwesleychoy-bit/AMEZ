@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMEZ — Font Suggestions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Serif+Display&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Josefin+Sans:wght@100;200;300&family=Tenor+Sans&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #F5F0E8;
+      color: #2C2416;
+      padding: 48px 32px 80px;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    .page-title {
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #A08060;
+      margin-bottom: 40px;
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card {
+      background: #EDE8DF;
+      padding: 44px 36px 32px;
+      border: 1px solid #D9D0C1;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .card:hover { background: #E6DFD4; }
+
+    .wordmark {
+      font-size: clamp(56px, 12vw, 100px);
+      letter-spacing: 0.2em;
+      line-height: 1;
+      color: #2C2416;
+      margin-bottom: 28px;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: #D9D0C1;
+      margin-bottom: 16px;
+    }
+
+    .font-name {
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #2C2416;
+      margin-bottom: 5px;
+    }
+
+    .font-desc {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: #A08060;
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #C4924A;
+      border: 1px solid #C4924A;
+      padding: 2px 7px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* 1 — Playfair Display */
+    .f1 { font-family: 'Playfair Display', serif; font-weight: 400; }
+
+    /* 2 — DM Serif Display */
+    .f2 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+
+    /* 3 — Fraunces */
+    .f3 { font-family: 'Fraunces', serif; font-weight: 300; font-variation-settings: 'opsz' 72; }
+
+    /* 4 — Josefin Sans */
+    .f4 { font-family: 'Josefin Sans', sans-serif; font-weight: 200; letter-spacing: 0.38em; }
+
+    /* 5 — Tenor Sans */
+    .f5 { font-family: 'Tenor Sans', sans-serif; font-weight: 400; letter-spacing: 0.28em; }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">AMEZ — Font Suggestions</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="wordmark f1">AMEZ</div>
+      <div class="divider"></div>
+      <div class="font-name">Playfair Display <span class="badge">Serif</span></div>
+      <div class="font-desc">High contrast, editorial. Strong character — luxury magazine and premium brand energy. Confident and classic.</div>
+    </div>
+
+    <div class="card">
+      <div class="wordmark f2">AMEZ</div>
+      <div class="divider"></div>
+      <div class="font-name">DM Serif Display <span class="badge">Serif</span></div>
+      <div class="font-desc">Warm, slightly quirky curves. Modern editorial serif — feels artisan and premium without being stiff.</div>
+    </div>
+
+    <div class="card">
+      <div class="wordmark f3">AMEZ</div>
+      <div class="divider"></div>
+      <div class="font-name">Fraunces <span class="badge">Serif · Variable</span></div>
+      <div class="font-desc">Organic, warm, humanistic. A favourite for artisan food and coffee brands. Feels hand-crafted yet refined.</div>
+    </div>
+
+    <div class="card">
+      <div class="wordmark f4">AMEZ</div>
+      <div class="divider"></div>
+      <div class="font-name">Josefin Sans <span class="badge">Sans · Geometric</span></div>
+      <div class="font-desc">Ultra-thin geometric, wide tracking. Minimal luxury — the kind used by high-end Japanese lifestyle brands.</div>
+    </div>
+
+    <div class="card">
+      <div class="wordmark f5">AMEZ</div>
+      <div class="divider"></div>
+      <div class="font-name">Tenor Sans <span class="badge">Sans · Humanist</span></div>
+      <div class="font-desc">Clean, neutral, quietly elegant. A humanist sans that disappears into the design — no personality, just presence.</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,12 +1,1045 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Test</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMEZ — Morning Ritual</title>
+  <meta name="description" content="AMEZ is a minimalist Hong Kong coffee storefront for single-origin drip bag coffee, crafted for quiet morning rituals." />
+  <meta name="robots" content="index, follow" />
+  <meta name="google" content="notranslate" />
+  <meta http-equiv="Content-Language" content="en, zh-Hant" />
+  <meta name="theme-color" content="#F5F0E8" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AMEZ" />
+  <meta property="og:title" content="AMEZ — Morning Ritual" />
+  <meta property="og:description" content="Single-origin drip coffee, crafted for quiet mornings." />
+  <meta property="og:image" content="images/nutty.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AMEZ — Morning Ritual" />
+  <meta name="twitter:description" content="Single-origin drip coffee, crafted for quiet mornings." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Serif+TC:wght@300;400&family=Noto+Sans+TC:wght@300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:         '#F5F0E8',
+            'cream-dark':  '#EDE8DF',
+            'cream-deep':  '#E2D9CC',
+            'cream-border':'#D9D0C1',
+            brown:         '#2C2416',
+            'brown-mid':   '#6B5540',
+            'brown-light': '#A08060',
+            'brown-pale':  '#C4B89E',
+            amber:         '#C4924A',
+            blush:         '#B8909A',
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Noto Serif TC', 'Georgia', 'serif'],
+            display: ['Raleway', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'Arial', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ================================================================
+       INLINE STYLES — duplicates styles.css so Cloudflare cannot break
+       the layout by mangling/minifying/rewriting the external file.
+       This block takes precedence due to cascade order.
+       ================================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      /* Site-wide text scale — bumps every rem-based size up ~12.5% for
+         better readability (16px → 18px baseline). */
+      font-size: 112.5%;
+    }
+    @media (max-width: 640px) {
+      html { font-size: 106.25%; }
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      font-variant-numeric: lining-nums;
+      font-feature-settings: "lnum" 1;
+    }
+
+    body input,
+    body textarea,
+    body button,
+    body select {
+      font-variant-numeric: lining-nums;
+      font-feature-settings: "lnum" 1;
+    }
+
+    /* Wordmark — MINI COFFEE style: Raleway ultra-light (cf. Covey hero) */
+    .wordmark {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 100;
+      font-size: clamp(76px, 15.2vw, 172px);
+      letter-spacing: 0.22em;
+      line-height: 1;
+      color: #2C2416;
+    }
+
+    /* Nav + footer logo — same display family, slightly heavier */
+    .logo-text {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.32em;
+    }
+
+    /* Product names get a clearer hierarchy without losing the soft AM22 feel. */
+    #shop h3[data-i18n] {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      font-weight: 400;
+    }
+
+    /* Language switcher */
+    .lang-btn {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      font-weight: 300;
+      font-size: 12.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #A08060;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px 6px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+    .lang-btn.active,
+    .lang-btn:hover { color: #2C2416; }
+
+    /* Cart icon button — 44px touch area */
+    header nav button[aria-label="Cart"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Scroll indicator */
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, #A08060);
+      animation: scrollFade 2s ease-in-out infinite;
+    }
+    @keyframes scrollFade {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+      50%      { opacity: 1;   transform: scaleY(1); }
+    }
+
+    /* Cart drawer transition */
+    #cart-drawer {
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Image hover (desktop only) */
+    @media (hover: hover) and (pointer: fine) {
+      article img {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      article:hover img {
+        transform: scale(1.04);
+      }
+    }
+
+    /* Section anchor scroll margin */
+    section { scroll-margin-top: 80px; }
+
+    /* Pull quote */
+    .pull-quote {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* Focus rings */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 1px solid #2C2416;
+      outline-offset: 3px;
+    }
+
+    /* Cart overlay blur */
+    #cart-overlay { backdrop-filter: blur(2px); }
+
+    /* Tabular price figures */
+    .price {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+
+    /* ================ HERO LAYOUT (centered + anchored) ================ */
+    #home {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+    }
+    @supports (min-height: 100svh) {
+      #home { min-height: 100svh; }
+    }
+    .hero-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 42rem;
+      margin: 0 auto;
+      gap: clamp(2rem, 6vh, 3.5rem);
+    }
+    .hero-tagline-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 0.5rem;
+    }
+
+    /* Reserved min-heights — keep hero wordmark anchored across languages */
+    #home [data-i18n="heroEyebrow"] {
+      min-height: 1.25em;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #home [data-i18n="heroTagline"] {
+      min-height: 3.5rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #home [data-i18n="heroSub"] {
+      min-height: 1.75rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    @media (min-width: 768px) {
+      #home [data-i18n="heroTagline"] { min-height: 4rem; }
+      #home [data-i18n="heroSub"]     { min-height: 2rem; }
+    }
+
+    /* Chinese hero tagline — clean sans, no italic */
+    html[lang="zh-Hant"] [data-i18n="heroTagline"] {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 300;
+      font-style: normal;
+      font-size: clamp(18px, 3.2vw, 26px);
+      letter-spacing: 0.08em;
+    }
+
+    /* English — prose; UI caps unified (same as product meta: p1Sub / p2Meta) */
+    html[lang="en"] #home [data-i18n="heroTagline"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+      font-weight: 300 !important;
+      font-style: italic !important;
+      letter-spacing: 0.06em !important;
+    }
+    html[lang="en"] #home [data-i18n="heroSub"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      font-style: normal;
+    }
+    html[lang="en"] [data-i18n].uppercase:not(.logo-text),
+    html[lang="en"] .lang-btn,
+    html[lang="en"] footer nav a[data-i18n],
+    html[lang="en"] footer #contact-phone,
+    html[lang="en"] footer #contact-email {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+    html[lang="en"] footer #contact-phone {
+      letter-spacing: 0.06em;
+    }
+    html[lang="en"] footer #contact-email {
+      letter-spacing: 0.05em;
+      text-transform: none;
+    }
+    html[lang="en"] #collaboration a[href^="mailto:"],
+    html[lang="en"] #collab-whatsapp {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+    html[lang="en"] a[data-i18n="heroCta"],
+    html[lang="en"] #shop article button[data-i18n="addToCart"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+    }
+    html[lang="en"] #cart-items .text-xs.uppercase,
+    html[lang="en"] #cart-items p.text-\[11px\].uppercase,
+    html[lang="en"] #cart-items button.text-\[10px\].uppercase {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+    html[lang="en"] #cart-progress-text {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+    }
+    html[lang="en"] #checkout-free-shipping-note {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+    html[lang="en"] #story p.text-xs.uppercase.text-brown-pale {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+    }
+    html[lang="en"] #checkout-success .uppercase [data-i18n] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+    html[lang="en"] #checkout-modal [data-i18n="chkRemark"],
+    html[lang="en"] #checkout-modal [data-i18n="formPayHelp"],
+    html[lang="en"] #checkout-modal [data-i18n="formPayPrivacy"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+    html[lang="en"] #checkout-order-id,
+    html[lang="en"] #fps-id,
+    html[lang="en"] #success-order-id {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+    html[lang="en"] #shop h3[data-i18n] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.1em !important;
+      font-style: normal !important;
+    }
+    html[lang="en"] #shop [data-i18n="p1Desc1"],
+    html[lang="en"] #shop [data-i18n="p1Desc2"],
+    html[lang="en"] #shop [data-i18n="p2Desc1"],
+    html[lang="en"] #shop [data-i18n="p2Desc2"],
+    html[lang="en"] #story p[data-i18n],
+    html[lang="en"] #collaboration [data-i18n="collabBody"],
+    html[lang="en"] #checkout-success [data-i18n="successBody"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      line-height: 1.75;
+    }
+    html[lang="en"] #shop [data-i18n="p1Price"],
+    html[lang="en"] #shop [data-i18n="p2Price"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+    html[lang="en"] #checkout-modal input:not([type="hidden"]):not([type="file"]),
+    html[lang="en"] #checkout-modal textarea {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+    html[lang="en"] #order-submit-status,
+    html[lang="en"] #payment-proof-error,
+    html[lang="en"] #payment-proof-filename {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+    html[lang="en"] #checkout-summary {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+    }
+    html[lang="en"] #cart-items p.text-sm {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.06em !important;
+    }
+    html[lang="en"] footer [data-i18n="footerPolicy"],
+    html[lang="en"] footer [data-i18n="footerRights"] {
+      font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+    }
+
+    /* ================ MOBILE OPTIMIZATIONS ================ */
+
+    /* Wordmark sizing on small phones */
+    @media (max-width: 640px) {
+      .wordmark {
+        font-size: clamp(60px, 17vw, 98px);
+        letter-spacing: 0.18em;
+      }
+    }
+    @media (max-width: 360px) {
+      .wordmark {
+        font-size: 54px;
+        letter-spacing: 0.16em;
+      }
+    }
+
+    /* Prevent iOS auto-zoom on form inputs (<16px triggers zoom) */
+    @media (max-width: 640px) {
+      #checkout-modal input[type="text"],
+      #checkout-modal input[type="tel"],
+      #checkout-modal input[type="email"],
+      #checkout-modal input:not([type]),
+      #checkout-modal textarea {
+        font-size: 16px;
+      }
+    }
+
+    /* Tighter section padding on mobile */
+    @media (max-width: 640px) {
+      #shop, #story {
+        padding-top: 64px;
+        padding-bottom: 64px;
+      }
+      #story .grid {
+        gap: 2.5rem !important;
+        margin-top: 2.5rem !important;
+      }
+      #home .scroll-line { display: none; }
+    }
+
+    /* Cart qty buttons — tappable */
+    #cart-items button {
+      min-width: 36px;
+      min-height: 36px;
+      font-size: 16px;
+    }
+
+    /* Narrow-phone Add to Cart — let letter-spacing breathe */
+    @media (max-width: 400px) {
+      #shop article button {
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+
+    /* Footer nav wraps cleanly on mobile */
+    @media (max-width: 640px) {
+      footer nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem 1.25rem;
+      }
+      footer nav span:first-of-type { display: none; }
+    }
+
+    /* Checkout modal */
+    #checkout-modal { isolation: isolate; }
+    @media (max-width: 767px) {
+      #checkout-modal #checkout-body {
+        padding: 1.5rem 1.25rem 2rem;
+      }
+      #checkout-modal #btn-submit-order {
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+      #checkout-modal .sticky {
+        box-shadow: 0 1px 0 rgba(44, 36, 22, 0.06);
+      }
+    }
+
+    body.checkout-open { overflow: hidden; }
+
+    /* Autofill — keep cream background */
+    input:-webkit-autofill,
+    textarea:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset;
+      -webkit-text-fill-color: #2C2416;
+      caret-color: #2C2416;
+    }
+
+    /* Checkout summary stays in brand serif */
+    #checkout-summary {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+    }
+
+    /* Typography polish — improve readability while keeping the warm palette. */
+    .text-brown-mid { color: #594737 !important; }
+    .text-brown-light { color: #7A614A !important; }
+    .text-brown-pale { color: #9A8B74 !important; }
+
+    main p {
+      text-wrap: pretty;
+    }
+
+    footer nav,
+    #collaboration a {
+      color: #594737;
+    }
+
+    #collaboration [data-i18n="collabEyebrow"],
+    footer [data-i18n="footerPolicy"] {
+      color: #7A614A;
+    }
+
+    html[lang="zh-Hant"] [data-i18n]:not(.wordmark):not(.logo-text) {
+      letter-spacing: 0.06em !important;
+    }
+
+    html[lang="zh-Hant"] .lang-btn,
+    html[lang="zh-Hant"] nav a[data-i18n],
+    html[lang="zh-Hant"] button[data-i18n],
+    html[lang="zh-Hant"] h2[data-i18n],
+    html[lang="zh-Hant"] #home [data-i18n="heroEyebrow"],
+    html[lang="zh-Hant"] #home [data-i18n="heroSub"],
+    html[lang="zh-Hant"] #story p[data-i18n],
+    html[lang="zh-Hant"] #collaboration [data-i18n="collabEyebrow"],
+    html[lang="zh-Hant"] #collaboration [data-i18n="collabBody"],
+    html[lang="zh-Hant"] #shop [data-i18n="p1Sub"],
+    html[lang="zh-Hant"] #shop [data-i18n="p2Sub"],
+    html[lang="zh-Hant"] #shop [data-i18n="p1Meta"],
+    html[lang="zh-Hant"] #shop [data-i18n="p2Meta"],
+    html[lang="zh-Hant"] #shop [data-i18n="p1Desc1"],
+    html[lang="zh-Hant"] #shop [data-i18n="p1Desc2"],
+    html[lang="zh-Hant"] #shop [data-i18n="p2Desc1"],
+    html[lang="zh-Hant"] #shop [data-i18n="p2Desc2"],
+    html[lang="zh-Hant"] #checkout-modal [data-i18n],
+    html[lang="zh-Hant"] #cart-drawer [data-i18n],
+    html[lang="zh-Hant"] #shop [data-i18n="p1Price"],
+    html[lang="zh-Hant"] #shop [data-i18n="p2Price"],
+    html[lang="zh-Hant"] footer [data-i18n],
+    html[lang="zh-Hant"] #collaboration a[href^="mailto:"],
+    html[lang="zh-Hant"] #collab-whatsapp,
+    html[lang="zh-Hant"] #collaboration div.mt-8 > span.text-brown-pale,
+    html[lang="zh-Hant"] footer #contact-phone,
+    html[lang="zh-Hant"] footer #contact-email,
+    html[lang="zh-Hant"] footer nav > span.text-brown-pale {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 300;
+    }
+
+    /* Trust strip — short Chinese labels need sans + medium weight at small size */
+    html[lang="zh-Hant"] [data-i18n^="trust"] {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 500;
+      font-size: 0.8125rem;
+      letter-spacing: 0.1em !important;
+      text-transform: none;
+    }
+
+    html[lang="zh-Hant"] #shop h3[data-i18n] {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 500;
+    }
+
+    /* Cart lines + progress — filled by app.js (no data-i18n) */
+    html[lang="zh-Hant"] .font-zh-sans {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 300;
+    }
+
+    html[lang="zh-Hant"] #checkout-summary {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+      font-weight: 300;
+    }
+
+    html[lang="zh-Hant"] #checkout-free-shipping-note,
+    html[lang="zh-Hant"] #order-submit-status,
+    html[lang="zh-Hant"] #payment-proof-error,
+    html[lang="zh-Hant"] #payment-proof-filename {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 300;
+    }
+
+    html[lang="zh-Hant"] #checkout-modal input:not([type="hidden"]):not([type="file"]),
+    html[lang="zh-Hant"] #checkout-modal textarea {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 400;
+    }
+
+    /* Checkout helper copy — explicit so Tailwind body font-serif never wins */
+    html[lang="zh-Hant"] #checkout-modal [data-i18n="chkRemark"],
+    html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayHelp"],
+    html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayPrivacy"] {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+      font-weight: 300;
+      letter-spacing: 0.05em !important;
+      text-transform: none;
+    }
+
+    html[lang="zh-Hant"] #checkout-order-id,
+    html[lang="zh-Hant"] #fps-id,
+    html[lang="zh-Hant"] #success-order-id {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    html[lang="zh-Hant"] [data-i18n="successBody"] {
+      font-style: normal;
+    }
+
+    html[lang="zh-Hant"] h2[data-i18n],
+    html[lang="zh-Hant"] .lang-btn,
+    html[lang="zh-Hant"] button[data-i18n],
+    html[lang="zh-Hant"] a[data-i18n] {
+      letter-spacing: 0.12em !important;
+    }
+
+    html[lang="zh-Hant"] p[data-i18n],
+    html[lang="zh-Hant"] #collaboration a,
+    html[lang="zh-Hant"] footer nav {
+      line-height: 1.9;
+    }
+
+    /* Targeted readability pass for small supporting text. */
+    #shop [data-i18n="p1Sub"],
+    #shop [data-i18n="p2Sub"],
+    #shop [data-i18n="p1Meta"],
+    #shop [data-i18n="p2Meta"] {
+      letter-spacing: 0.14em;
+    }
+
+    #shop [data-i18n="p1Desc1"],
+    #shop [data-i18n="p1Desc2"],
+    #shop [data-i18n="p2Desc1"],
+    #shop [data-i18n="p2Desc2"],
+    #story p[data-i18n],
+    #collaboration [data-i18n="collabBody"] {
+      color: #594737;
+    }
+
+    #shop [data-i18n="p1Meta"],
+    #shop [data-i18n="p2Meta"] {
+      color: #6B5540;
+    }
+
+    .bg-cream-dark\/40 [data-i18n^="trust"] {
+      color: #594737;
+      letter-spacing: 0.18em;
+    }
+
+    #checkout-modal .text-\[11px\],
+    #checkout-modal .text-\[10px\] {
+      color: #7A614A;
+    }
+
+    #checkout-free-shipping-note,
+    #payment-proof-error,
+    #order-submit-status {
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 640px) {
+      #shop [data-i18n="p1Desc1"],
+      #shop [data-i18n="p1Desc2"],
+      #shop [data-i18n="p2Desc1"],
+      #shop [data-i18n="p2Desc2"],
+      #story p[data-i18n],
+      #collaboration [data-i18n="collabBody"] {
+        font-size: 0.92rem;
+      }
+
+      footer nav {
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+      }
+
+      footer [data-i18n="footerPolicy"],
+      footer [data-i18n="footerRights"] {
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+      }
+    }
+  </style>
 </head>
-<body>
-  <h1>Test page</h1>
-  <p>If you can read this, the page is loading and text is showing correctly.</p>
+<body class="bg-cream text-brown font-serif" translate="no">
+
+  <!-- CART OVERLAY -->
+  <div id="cart-overlay" class="fixed inset-0 bg-brown/20 z-40 hidden" aria-hidden="true"></div>
+
+  <!-- CART DRAWER -->
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-cream z-50 translate-x-full flex flex-col shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
+    <div class="flex items-center justify-between px-8 py-6 border-b border-cream-border">
+      <h2 id="cart-title" class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTitle">Your Cart</h2>
+      <button onclick="AMEZ.closeCart()" class="text-xs tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose" aria-label="Close cart">Close</button>
+    </div>
+
+    <div id="cart-items" class="flex-1 overflow-y-auto px-8 py-2" aria-live="polite"></div>
+
+    <div class="px-8 py-6 border-t border-cream-border">
+
+      <!-- Free shipping progress -->
+      <div id="cart-progress" class="hidden mb-5">
+        <div class="h-px w-full bg-cream-border overflow-hidden">
+          <div id="cart-progress-fill" class="h-full bg-brown transition-all duration-500" style="width:0%"></div>
+        </div>
+        <p id="cart-progress-text" class="font-zh-sans mt-3 text-[11px] tracking-[0.22em] uppercase text-brown-light text-center"></p>
+      </div>
+
+      <!-- Totals -->
+      <div class="space-y-2 mb-6">
+        <div class="flex justify-between items-baseline">
+          <span class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="cartSubtotal">Subtotal</span>
+          <span id="cart-subtotal" class="text-sm tracking-wider price text-brown-mid">HK$0</span>
+        </div>
+        <div class="flex justify-between items-baseline">
+          <span class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="cartShipping">Shipping</span>
+          <span id="cart-shipping" class="text-sm tracking-wider price text-brown-mid">—</span>
+        </div>
+        <div class="flex justify-between items-baseline pt-3 border-t border-cream-border">
+          <span class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTotal">Total</span>
+          <span id="cart-total" class="text-lg tracking-wider price">HK$0</span>
+        </div>
+      </div>
+
+      <button id="btn-checkout" class="w-full py-3.5 border border-brown text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream transition-colors duration-300 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brown" data-i18n="checkout">Checkout</button>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-30 bg-cream/95 backdrop-blur-sm border-b border-cream-border">
+    <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#home" class="hover:opacity-70 transition-opacity logo-text text-base uppercase">AMEZ</a>
+
+      <!-- Nav links (desktop only — mobile uses subtle sub-bar below) -->
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#shop" class="text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" data-i18n="navShop">Shop</a>
+        <a href="#story" class="text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" data-i18n="navStory">Our Story</a>
+      </div>
+
+      <!-- Language switcher + Cart -->
+      <div class="flex items-center gap-3 md:gap-6">
+        <div class="flex items-center gap-2">
+          <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+          <span class="text-brown-pale text-xs select-none">/</span>
+          <button class="lang-btn" data-lang="zh-Hant" onclick="setLang('zh-Hant')">中文</button>
+        </div>
+        <button id="btn-cart" onclick="AMEZ.openCart()" class="relative flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" aria-label="Open cart" aria-haspopup="dialog" aria-controls="cart-drawer" aria-expanded="false">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="6" width="15" height="12" rx="1"/>
+            <path d="M5 6V4.5a3.5 3.5 0 0 1 7 0V6"/>
+          </svg>
+          <span id="cart-count-badge" class="hidden text-amber font-light">0</span>
+        </button>
+      </div>
+
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16">
+      <div class="hero-stack max-w-2xl mx-auto w-full flex flex-col items-center">
+        <p class="text-sm tracking-[0.38em] uppercase text-brown-mid" data-i18n="heroEyebrow">Morning Ritual</p>
+        <h1 class="wordmark">AMEZ</h1>
+        <div class="hero-tagline-group flex flex-col items-center w-full">
+          <p class="text-2xl md:text-3xl italic tracking-[0.06em] leading-relaxed text-brown" data-i18n="heroTagline">Good Morning, Beautifully Simple.</p>
+          <p class="text-base text-brown-mid tracking-[0.04em] leading-relaxed" data-i18n="heroSub">Single-origin drip coffee, crafted for quiet mornings.</p>
+        </div>
+        <a href="#shop" class="inline-block border border-brown/60 px-12 py-3.5 text-xs tracking-[0.32em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="heroCta">Explore the Collection</a>
+      </div>
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <div class="border-t border-b border-cream-border py-7 bg-cream-dark/40">
+      <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust1">Single Origin</p></div>
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust2">Freshly Roasted</p></div>
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust3">Ready in Minutes</p></div>
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust4">Sealed Fresh</p></div>
+      </div>
+    </div>
+
+    <!-- SHOP -->
+    <section id="shop" class="py-24 px-6">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="border-b border-cream-border pb-4 mb-16">
+          <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="shopTitle">Selections</h2>
+        </div>
+
+        <!-- Product cards — each with its own Add to Cart button directly below -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+
+          <!-- Product 1: Nutty -->
+          <article class="flex flex-col">
+            <div class="bg-cream-dark aspect-[3/2] flex items-center justify-center mb-8 overflow-hidden">
+              <img src="nutty.svg" alt="Nutty Drip Bag" width="288" height="288" decoding="async" class="w-60 h-60 md:w-72 md:h-72 object-contain" />
+            </div>
+            <div class="border-t border-cream-border pt-6 flex-1 flex flex-col">
+              <div class="flex items-start justify-between mb-2">
+                <div>
+                  <h3 class="text-xl tracking-[0.06em]" data-i18n="p1Name">Nutty Drip Bag</h3>
+                  <p class="text-xs tracking-[0.24em] uppercase text-brown-light mt-1.5" data-i18n="p1Sub">Single Origin · 10 Packs</p>
+                  <p class="text-xs tracking-[0.12em] uppercase text-brown-light mt-2" data-i18n="p1Meta">Medium Roast</p>
+                </div>
+                <span class="text-lg tracking-wider price" data-i18n="p1Price">HK$120</span>
+              </div>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em] mt-4" data-i18n="p1Desc1">Warm, rounded, and smooth.</p>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em] mb-8" data-i18n="p1Desc2">Notes of hazelnut and milk chocolate with a lingering caramel finish.</p>
+              <button onclick="AMEZ.addToCart('nutty')" class="mt-auto w-full py-3.5 border border-brown/50 text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="addToCart">Add to Cart</button>
+            </div>
+          </article>
+
+          <!-- Product 2: Fruity & Floral -->
+          <article class="flex flex-col">
+            <div class="bg-cream-dark aspect-[3/2] flex items-center justify-center mb-8 overflow-hidden">
+              <img src="fruity.svg" alt="Fruity and Floral Drip Bag" width="288" height="288" decoding="async" class="w-60 h-60 md:w-72 md:h-72 object-contain" />
+            </div>
+            <div class="border-t border-cream-border pt-6 flex-1 flex flex-col">
+              <div class="flex items-start justify-between mb-2">
+                <div>
+                  <h3 class="text-xl tracking-[0.06em]" data-i18n="p2Name">Fruity &amp; Floral Drip Bag</h3>
+                  <p class="text-xs tracking-[0.24em] uppercase text-brown-light mt-1.5" data-i18n="p2Sub">Single Origin · 2 Varieties · 10 Packs Total</p>
+                  <p class="text-xs tracking-[0.12em] uppercase text-brown-light mt-2" data-i18n="p2Meta">Medium Light Roast</p>
+                </div>
+                <span class="text-lg tracking-wider price" data-i18n="p2Price">HK$150</span>
+              </div>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em] mt-4" data-i18n="p2Desc1">Bright and aromatic.</p>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em] mb-8" data-i18n="p2Desc2">Notes of stone fruit, jasmine, and a whisper of bergamot.</p>
+              <button onclick="AMEZ.addToCart('fruity')" class="mt-auto w-full py-3.5 border border-brown/50 text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="addToCart">Add to Cart</button>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BRAND STORY -->
+    <section id="story" class="py-24 px-6 border-t border-cream-border bg-cream-dark/30">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="border-b border-cream-border pb-4 mb-4">
+          <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="storyTitle">Our Story</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mt-16 items-center">
+
+          <div class="flex items-center justify-center">
+            <div class="text-center select-none">
+              <div class="logo-text text-4xl uppercase tracking-[0.28em]">AMEZ</div>
+              <div class="w-12 h-px bg-cream-border mx-auto mt-8"></div>
+              <p class="text-xs tracking-[0.32em] uppercase text-brown-pale mt-4">Est. 2026</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em] mb-6" data-i18n="story1">AM — the morning hour. EZ — the ease we want each cup to carry. Together, AMEZ is a morning promise: one bag, one cup, one good start.</p>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em] mb-6" data-i18n="story2">We source only the finest single-origin beans, roasted with care and sealed fresh into each drip bag.</p>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em]" data-i18n="story3">Every morning deserves a ritual. Every ritual deserves AMEZ.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLABORATION -->
+    <section id="collaboration" class="py-24 px-6 border-t border-cream-border">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="border-b border-cream-border pb-4 mb-4">
+          <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="collabTitle">Collaboration</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mt-16 items-start">
+
+          <div>
+            <p class="text-xs tracking-[0.32em] uppercase text-brown-pale" data-i18n="collabEyebrow">Wholesale · Cafe · Gifting</p>
+            <div class="w-12 h-px bg-cream-border mt-8"></div>
+          </div>
+
+          <div>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em]" data-i18n="collabBody">Wholesale, cafe, office, and gifting enquiries are welcome. For cooperation opportunities, please contact us by email or phone.</p>
+            <div class="mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 text-xs tracking-[0.16em] text-brown-mid">
+              <a href="mailto:amezcoffeehk@gmail.com" class="hover:text-brown transition-colors">amezcoffeehk@gmail.com</a>
+              <span class="hidden sm:inline text-brown-pale">·</span>
+              <a id="collab-whatsapp" href="https://api.whatsapp.com/send?phone=85290137619" target="_blank" rel="noopener noreferrer" class="cursor-pointer hover:text-brown hover:underline underline-offset-4 decoration-brown/30 transition-colors price" aria-label="Contact AMEZ on WhatsApp">9013 7619</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-cream-border py-14 px-6">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+
+      <div class="text-center md:text-left">
+        <p class="logo-text text-base uppercase mb-2">AMEZ</p>
+        <p class="text-xs tracking-[0.14em] text-brown-pale" data-i18n="footerPolicy">Quality guaranteed on every pack.</p>
+      </div>
+
+      <nav class="flex flex-col md:flex-row items-center gap-4 md:gap-10 text-xs tracking-[0.22em] uppercase">
+        <a href="#shop"  class="text-brown-mid hover:text-brown transition-colors" data-i18n="navShop">Shop</a>
+        <a href="#story" class="text-brown-mid hover:text-brown transition-colors" data-i18n="navStory">Our Story</a>
+        <span class="text-brown-pale">·</span>
+        <a id="contact-phone" href="https://api.whatsapp.com/send?phone=85290137619" target="_blank" rel="noopener noreferrer" class="cursor-pointer text-brown-mid hover:text-brown hover:underline underline-offset-4 decoration-brown/30 transition-colors tabular-nums" aria-label="Contact AMEZ on WhatsApp"></a>
+        <a id="contact-email" href="#" class="text-brown-mid hover:text-brown transition-colors normal-case tracking-[0.04em]"></a>
+      </nav>
+
+      <p class="text-xs tracking-[0.12em] text-brown-pale" data-i18n="footerRights">© 2026 AMEZ. All rights reserved.</p>
+
+    </div>
+  </footer>
+
+  <!-- =================== CHECKOUT MODAL =================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true" aria-labelledby="checkout-title" tabindex="-1">
+    <div id="checkout-backdrop" class="absolute inset-0 bg-brown/40 backdrop-blur-[2px]" aria-hidden="true"></div>
+
+    <div class="absolute inset-0 overflow-y-auto">
+      <div class="min-h-full flex items-start md:items-center justify-center p-0 md:p-6">
+        <div class="relative w-full md:max-w-xl bg-cream md:border md:border-cream-border shadow-2xl">
+
+          <!-- Header -->
+          <div class="sticky top-0 z-10 flex items-center justify-between px-7 py-5 border-b border-cream-border bg-cream">
+            <div id="checkout-title" class="text-xs tracking-[0.28em] uppercase" data-i18n="chkTitle">Checkout</div>
+            <button onclick="AMEZ.closeCheckout()" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose" aria-label="Close checkout">Close</button>
+          </div>
+
+          <!-- Body (form view) -->
+          <div id="checkout-body" class="p-7">
+
+            <!-- Order Summary -->
+            <div class="border-b border-cream-border pb-6 mb-6">
+              <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-3" data-i18n="chkOrderSummary">Order Summary</div>
+              <pre id="checkout-summary" class="whitespace-pre-wrap text-sm leading-[1.85] text-brown-mid font-serif tracking-[0.02em]"></pre>
+              <p id="checkout-free-shipping-note" class="hidden mt-4 border border-cream-border bg-cream-dark/50 px-4 py-3 text-xs leading-relaxed tracking-[0.04em] text-brown-mid"></p>
+            </div>
+
+            <!-- Order ID -->
+            <div class="mb-5">
+              <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="chkOrder">Order</div>
+              <div class="mt-2 flex items-center justify-between gap-4">
+                <div id="checkout-order-id" class="text-sm tracking-[0.05em] price text-brown"></div>
+                <button id="btn-copy-order-id" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="copy">Copy</button>
+              </div>
+            </div>
+
+            <!-- Remark -->
+            <p class="text-xs tracking-[0.04em] leading-relaxed text-brown-mid bg-cream-dark border border-cream-border px-4 py-3 mb-6" data-i18n="chkRemark">Please include the Order ID in the transfer remark.</p>
+
+            <!-- Payment methods -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+              <a id="payme-link" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center border border-brown/50 px-4 py-4 text-xs tracking-[0.28em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="chkPayMe">Pay with PayMe</a>
+              <div class="border border-cream-border bg-cream-dark/50 px-4 py-3">
+                <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="chkFps">FPS</div>
+                <div class="mt-1.5 flex items-center justify-between gap-4">
+                  <div id="fps-id" class="text-sm tracking-[0.05em] price text-brown"></div>
+                  <button id="btn-copy-fps" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="copy">Copy</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form -->
+            <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-4" data-i18n="chkYourDetails">Your Details</div>
+
+            <form id="form-order" class="space-y-5">
+              <input type="hidden" id="order-id-field"      name="order_id"      value="" />
+              <input type="hidden" id="order-summary-field" name="order_summary" value="" />
+              <label class="sr-only" aria-hidden="true">
+                Website
+                <input name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formName">Name</span>
+                  <input name="name" required autocomplete="name" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                </label>
+                <label class="block">
+                  <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPhone">Phone / WhatsApp</span>
+                  <input name="phone" required type="tel" inputmode="tel" autocomplete="tel" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                </label>
+              </div>
+
+              <label class="block">
+                <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formAddress">Shipping Address</span>
+                <textarea name="address" required rows="2" autocomplete="street-address" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors resize-none"></textarea>
+              </label>
+
+              <label class="block">
+                <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formEmail">Email (optional)</span>
+                <input name="email" type="email" inputmode="email" autocomplete="email" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+              </label>
+
+              <!-- Payment proof upload -->
+              <div class="border border-cream-border bg-cream-dark/40 px-5 py-5 mt-2">
+                <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPayCap">Payment Screenshot</div>
+                <p class="mt-2 text-xs leading-relaxed text-brown-mid" data-i18n="formPayHelp">After paying by PayMe or FPS, please upload your screenshot here. Thanks.</p>
+                <p class="mt-1.5 text-[11px] leading-relaxed tracking-[0.03em] text-brown-pale" data-i18n="formPayPrivacy">Payment screenshots are used only to verify your order.</p>
+
+                <input id="payment-proof-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="sr-only" tabindex="-1" aria-hidden="true" aria-describedby="payment-proof-error payment-proof-filename" />
+
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                  <button id="btn-payment-proof-pick" type="button" class="border border-brown/50 px-4 py-2.5 text-[11px] tracking-[0.22em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="formChooseImg">Choose Image</button>
+                  <button id="btn-payment-proof-clear" type="button" class="hidden border border-cream-border px-4 py-2.5 text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown hover:border-brown transition-colors" data-i18n="formRemove">Remove</button>
+                </div>
+
+                <p id="payment-proof-filename" class="mt-3 hidden text-[11px] tracking-[0.04em] text-brown-light"></p>
+                <p id="payment-proof-error" class="mt-3 hidden text-[11px] tracking-[0.04em] text-[#b15a5a]"></p>
+
+                <div id="payment-proof-preview-wrap" class="mt-4 hidden">
+                  <div class="text-[10px] tracking-[0.22em] uppercase text-brown-light mb-2" data-i18n="formPreview">Preview</div>
+                  <img id="payment-proof-preview" alt="" class="max-h-52 w-auto max-w-full border border-cream-border object-contain bg-cream" />
+                </div>
+              </div>
+
+              <p id="order-submit-status" class="hidden text-center text-[11px] tracking-[0.04em] leading-relaxed text-[#b15a5a]" role="alert" aria-live="assertive"></p>
+              <button id="btn-submit-order" type="submit" class="w-full mt-3 py-4 bg-brown text-cream text-xs tracking-[0.32em] uppercase hover:bg-brown-mid transition-colors disabled:opacity-40 disabled:cursor-not-allowed" data-i18n="formSubmit">Submit Order</button>
+              <p class="text-center text-[10px] tracking-[0.22em] uppercase text-brown-pale" data-i18n="formTrust">Encrypted · No card stored</p>
+            </form>
+          </div>
+
+          <!-- Success state -->
+          <div id="checkout-success" class="hidden p-10 text-center">
+            <svg viewBox="0 0 40 40" class="mx-auto h-14 w-14 text-brown" aria-hidden="true">
+              <circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="0.8" fill="none"/>
+              <path d="M 13 20 L 18 25 L 27 15" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="mt-6 logo-text text-3xl uppercase tracking-[0.28em]" data-i18n="successTitle">Thank you</div>
+            <div class="mt-3 text-[11px] tracking-[0.28em] uppercase text-brown-light" data-i18n="successSub">Your order is received</div>
+            <p class="mt-6 max-w-sm mx-auto text-sm leading-[1.85] text-brown-mid italic" data-i18n="successBody">We'll confirm your order by WhatsApp or email shortly. Pour slow, sip slow.</p>
+            <div class="mt-8 text-[11px] tracking-[0.22em] uppercase text-brown-light">
+              <span data-i18n="chkOrder">Order</span> · <span id="success-order-id" class="price text-brown"></span>
+            </div>
+            <button onclick="AMEZ.closeCheckout()" class="mt-10 border border-brown/50 px-10 py-3 text-[11px] tracking-[0.28em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="successClose">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

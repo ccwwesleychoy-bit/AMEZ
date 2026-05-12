@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640" shape-rendering="geometricPrecision">
+  <g transform="scale(2)">
+  <!-- Background -->
+  <rect width="320" height="320" fill="#EDE8DF"/>
+
+  <!-- Drip bag body -->
+  <rect x="110" y="90" width="100" height="130" rx="4" fill="none" stroke="#B8909A" stroke-width="1.2"/>
+
+  <!-- Bag top fold line -->
+  <line x1="110" y1="110" x2="210" y2="110" stroke="#B8909A" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+  <!-- Drip bag handle -->
+  <rect x="125" y="76" width="70" height="16" rx="2" fill="none" stroke="#B8909A" stroke-width="1.2"/>
+
+  <!-- Hook / hang tab -->
+  <path d="M155 76 L155 62 Q155 56 160 56 Q165 56 165 62 L165 76" fill="none" stroke="#B8909A" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Filter drip lines at bottom -->
+  <line x1="140" y1="220" x2="138" y2="236" stroke="#B8909A" stroke-width="0.8" stroke-linecap="round"/>
+  <line x1="160" y1="220" x2="160" y2="240" stroke="#B8909A" stroke-width="0.8" stroke-linecap="round"/>
+  <line x1="180" y1="220" x2="182" y2="236" stroke="#B8909A" stroke-width="0.8" stroke-linecap="round"/>
+
+  <!-- 5-petal botanical flower motif -->
+  <!-- Petals — 5 rotated ellipses around center -->
+  <ellipse cx="160" cy="148" rx="7" ry="14" fill="none" stroke="#B8909A" stroke-width="0.9" transform="rotate(0 160 162)"/>
+  <ellipse cx="160" cy="148" rx="7" ry="14" fill="none" stroke="#B8909A" stroke-width="0.9" transform="rotate(72 160 162)"/>
+  <ellipse cx="160" cy="148" rx="7" ry="14" fill="none" stroke="#B8909A" stroke-width="0.9" transform="rotate(144 160 162)"/>
+  <ellipse cx="160" cy="148" rx="7" ry="14" fill="none" stroke="#B8909A" stroke-width="0.9" transform="rotate(216 160 162)"/>
+  <ellipse cx="160" cy="148" rx="7" ry="14" fill="none" stroke="#B8909A" stroke-width="0.9" transform="rotate(288 160 162)"/>
+  <!-- Flower center -->
+  <circle cx="160" cy="162" r="4" fill="#B8909A" opacity="0.3"/>
+  <circle cx="160" cy="162" r="1.5" fill="#B8909A" opacity="0.6"/>
+
+  <!-- Small leaf accents -->
+  <path d="M148 152 Q144 160 148 168" fill="none" stroke="#B8909A" stroke-width="0.7" opacity="0.5"/>
+  <path d="M172 152 Q176 160 172 168" fill="none" stroke="#B8909A" stroke-width="0.7" opacity="0.5"/>
+
+  <!-- Label band -->
+  <rect x="110" y="118" width="100" height="1" fill="#B8909A" opacity="0.4"/>
+  <rect x="110" y="128" width="100" height="1" fill="#B8909A" opacity="0.4"/>
+
+  <!-- Product text -->
+  <text x="160" y="136" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="7" font-weight="300" fill="#B8909A" letter-spacing="2.5">FRUITY &amp; FLORAL</text>
+
+  <!-- AMEZ wordmark at bottom of bag — darker + bolder for readability -->
+  <text x="160" y="210" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="8.5" font-weight="600" fill="#2C2416" letter-spacing="4">AMEZ</text>
+
+  <!-- Corner accent dots -->
+  <circle cx="115" cy="95" r="1.5" fill="#B8909A" opacity="0.4"/>
+  <circle cx="205" cy="95" r="1.5" fill="#B8909A" opacity="0.4"/>
+  </g>
+</svg>

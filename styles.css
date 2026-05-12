@@ -1,0 +1,569 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Serif+TC:wght@300;400&family=Noto+Sans+TC:wght@300;400;500&family=Raleway:wght@100;200;300&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Site-wide text scale — nudges every rem-based size up ~12.5% for better
+     readability (16px → 18px baseline). Layout untouched because paddings
+     and gaps also scale, preserving the minimalist proportions. */
+  font-size: 112.5%;
+}
+@media (max-width: 640px) {
+  html {
+    font-size: 106.25%;  /* gentler scale on phones to avoid horizontal overflow */
+  }
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+/* Wordmark — Raleway thin (MINI COFFEE display style), cream layout unchanged */
+.wordmark {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 100;
+  font-size: clamp(76px, 15.2vw, 172px);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: #2C2416;
+}
+
+/* Nav + footer logo */
+.logo-text {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.32em;
+}
+
+/* Product names get a clearer hierarchy without losing the soft AM22 feel. */
+#shop h3[data-i18n] {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-weight: 400;
+}
+
+/* Language switcher — bumped to 12.5px for readability */
+.lang-btn {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-weight: 300;
+  font-size: 12.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #A08060;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.lang-btn.active {
+  color: #2C2416;
+}
+
+.lang-btn:hover {
+  color: #2C2416;
+}
+
+/* Scroll indicator */
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, transparent, #A08060);
+  animation: scrollFade 2s ease-in-out infinite;
+}
+
+@keyframes scrollFade {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* Cart drawer transition */
+#cart-drawer {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth image hover (desktop / pointer devices only — avoids sticky-hover on touch) */
+@media (hover: hover) and (pointer: fine) {
+  article img {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  article:hover img {
+    transform: scale(1.04);
+  }
+}
+
+/* Subtle product card hover */
+article .product-card-inner {
+  transition: background 0.3s;
+}
+
+/* Section spacing */
+section {
+  scroll-margin-top: 64px;
+}
+
+/* Story decorative numerals */
+.story-deco {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 200;
+  font-size: clamp(48px, 10vw, 100px);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: #D9D0C1;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Pull quote */
+.pull-quote {
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* Button focus */
+button:focus-visible,
+a:focus-visible {
+  outline: 1px solid #2C2416;
+  outline-offset: 3px;
+}
+
+/* Cart overlay */
+#cart-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* Tabular figures for prices */
+.price {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* ============================
+   MOBILE OPTIMIZATIONS
+   ============================ */
+
+/* Small-phone wordmark (≤ 640px) — bumped ~12% but still safely fits 320px */
+@media (max-width: 640px) {
+  .wordmark {
+    font-size: clamp(60px, 17vw, 98px);
+    letter-spacing: 0.18em;
+  }
+}
+@media (max-width: 360px) {
+  .wordmark {
+    font-size: 54px;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* iOS Safari auto-zooms on any <input>/<textarea> with font-size < 16px.
+   Force 16px across ALL form fields inside the checkout so users don't get
+   kicked into zoom-view every time they tap a field. */
+@media (max-width: 640px) {
+  #checkout-modal input[type="text"],
+  #checkout-modal input[type="tel"],
+  #checkout-modal input[type="email"],
+  #checkout-modal input:not([type]),
+  #checkout-modal textarea {
+    font-size: 16px;
+  }
+}
+
+/* Use 100svh (small viewport height) on mobile to prevent the hero
+   from jumping when the iOS/Android URL bar collapses. Falls back to
+   min-h-screen (Tailwind) if unsupported. */
+@supports (min-height: 100svh) {
+  section#home {
+    min-height: 100svh;
+  }
+}
+
+/* Scroll-margin accounts for fixed 64px header — make anchor links land
+   with comfortable breathing room on mobile. */
+section {
+  scroll-margin-top: 80px;
+}
+
+/* Tighter section padding on mobile — py-24 (96px) is overkill on phones */
+@media (max-width: 640px) {
+  #shop, #story {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  /* Story: reduce the huge gap between logo column and text column */
+  #story .grid { gap: 2.5rem !important; margin-top: 2.5rem !important; }
+  #home .scroll-line { display: none; } /* hide decorative scroll cue on mobile to avoid overlap */
+}
+
+/* Language buttons — make the hit area 44×44 (Apple HIG minimum) without
+   changing the visual size of the text. */
+.lang-btn {
+  padding: 10px 6px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cart icon button — ensure 44px min touch area */
+header nav button[aria-label="Cart"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Cart drawer: quantity +/− buttons need to be tappable */
+#cart-items button {
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 16px;
+}
+
+/* Add-to-cart buttons — on very narrow screens, let text wrap gracefully
+   instead of bleeding out of the button */
+@media (max-width: 400px) {
+  section#shop .grid.grid-cols-2 button {
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* Mobile nav: show Shop / Story links below the header on small screens
+   so users aren't forced to scroll to find sections. */
+@media (max-width: 767px) {
+  .mobile-nav-links {
+    display: flex !important;
+  }
+}
+
+/* Footer stacks nicely on mobile — keep contact info readable */
+@media (max-width: 640px) {
+  footer nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.25rem;
+  }
+  footer nav span:first-of-type { display: none; } /* hide · separator when wrapping */
+}
+
+/* Checkout modal on mobile — full-height sheet feel, large submit button */
+@media (max-width: 767px) {
+  #checkout-modal #checkout-body { padding: 1.5rem 1.25rem 2rem; }
+  #checkout-modal #btn-submit-order { padding-top: 18px; padding-bottom: 18px; }
+  #checkout-modal .sticky { box-shadow: 0 1px 0 rgba(44, 36, 22, 0.06); }
+}
+
+/* Checkout modal header — ensure always visible, not masked by iOS address bar */
+#checkout-modal {
+  /* isolate creates a new stacking context, prevents fixed elements from bleeding */
+  isolation: isolate;
+}
+
+/* Hero tagline — Chinese gets its own voice: clean sans, no italic */
+html[lang="zh-Hant"] [data-i18n="heroTagline"] {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: clamp(18px, 3.2vw, 26px);
+  letter-spacing: 0.08em;
+}
+
+html[lang="zh-Hant"] .lang-btn,
+html[lang="zh-Hant"] nav a[data-i18n],
+html[lang="zh-Hant"] button[data-i18n],
+html[lang="zh-Hant"] h2[data-i18n],
+html[lang="zh-Hant"] #home [data-i18n="heroEyebrow"],
+html[lang="zh-Hant"] #home [data-i18n="heroSub"],
+html[lang="zh-Hant"] #story p[data-i18n],
+html[lang="zh-Hant"] #collaboration [data-i18n="collabEyebrow"],
+html[lang="zh-Hant"] #collaboration [data-i18n="collabBody"],
+html[lang="zh-Hant"] #shop [data-i18n="p1Sub"],
+html[lang="zh-Hant"] #shop [data-i18n="p2Sub"],
+html[lang="zh-Hant"] #shop [data-i18n="p1Meta"],
+html[lang="zh-Hant"] #shop [data-i18n="p2Meta"],
+html[lang="zh-Hant"] #shop [data-i18n="p1Desc1"],
+html[lang="zh-Hant"] #shop [data-i18n="p1Desc2"],
+html[lang="zh-Hant"] #shop [data-i18n="p2Desc1"],
+html[lang="zh-Hant"] #shop [data-i18n="p2Desc2"],
+html[lang="zh-Hant"] #checkout-modal [data-i18n],
+html[lang="zh-Hant"] #cart-drawer [data-i18n],
+html[lang="zh-Hant"] #shop [data-i18n="p1Price"],
+html[lang="zh-Hant"] #shop [data-i18n="p2Price"],
+html[lang="zh-Hant"] footer [data-i18n],
+html[lang="zh-Hant"] #collaboration a[href^="mailto:"],
+html[lang="zh-Hant"] #collab-whatsapp,
+html[lang="zh-Hant"] #collaboration div.mt-8 > span.text-brown-pale,
+html[lang="zh-Hant"] footer #contact-phone,
+html[lang="zh-Hant"] footer #contact-email,
+html[lang="zh-Hant"] footer nav > span.text-brown-pale {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 300;
+}
+
+/* Trust strip — short Chinese labels need sans + medium weight at small size */
+html[lang="zh-Hant"] [data-i18n^="trust"] {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em !important;
+  text-transform: none;
+}
+
+html[lang="zh-Hant"] #shop h3[data-i18n] {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 500;
+}
+
+/* Cart lines + progress — filled by app.js (no data-i18n) */
+html[lang="zh-Hant"] .font-zh-sans {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 300;
+}
+
+html[lang="zh-Hant"] #checkout-summary {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+  font-weight: 300;
+}
+
+html[lang="zh-Hant"] #checkout-free-shipping-note,
+html[lang="zh-Hant"] #order-submit-status,
+html[lang="zh-Hant"] #payment-proof-error,
+html[lang="zh-Hant"] #payment-proof-filename {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 300;
+}
+
+html[lang="zh-Hant"] #checkout-modal input:not([type="hidden"]):not([type="file"]),
+html[lang="zh-Hant"] #checkout-modal textarea {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 400;
+}
+
+/* Checkout helper copy — explicit so Tailwind body font-serif never wins */
+html[lang="zh-Hant"] #checkout-modal [data-i18n="chkRemark"],
+html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayHelp"],
+html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayPrivacy"] {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+  font-weight: 300;
+  letter-spacing: 0.05em !important;
+  text-transform: none;
+}
+
+html[lang="zh-Hant"] #checkout-order-id,
+html[lang="zh-Hant"] #fps-id,
+html[lang="zh-Hant"] #success-order-id {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+html[lang="zh-Hant"] [data-i18n="successBody"] {
+  font-style: normal;
+}
+
+/* English — prose; UI caps unified (same as product meta: p1Sub / p2Meta) */
+html[lang="en"] #home [data-i18n="heroTagline"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 300 !important;
+  font-style: italic !important;
+  letter-spacing: 0.06em !important;
+}
+html[lang="en"] #home [data-i18n="heroSub"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  font-style: normal;
+}
+html[lang="en"] [data-i18n].uppercase:not(.logo-text),
+html[lang="en"] .lang-btn,
+html[lang="en"] footer nav a[data-i18n],
+html[lang="en"] footer #contact-phone,
+html[lang="en"] footer #contact-email {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+html[lang="en"] footer #contact-phone {
+  letter-spacing: 0.06em;
+}
+html[lang="en"] footer #contact-email {
+  letter-spacing: 0.05em;
+  text-transform: none;
+}
+html[lang="en"] #collaboration a[href^="mailto:"],
+html[lang="en"] #collab-whatsapp {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+html[lang="en"] a[data-i18n="heroCta"],
+html[lang="en"] #shop article button[data-i18n="addToCart"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+}
+html[lang="en"] #cart-items .text-xs.uppercase,
+html[lang="en"] #cart-items p.text-\[11px\].uppercase,
+html[lang="en"] #cart-items button.text-\[10px\].uppercase {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+html[lang="en"] #cart-progress-text {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+html[lang="en"] #checkout-free-shipping-note {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+html[lang="en"] #story p.text-xs.uppercase.text-brown-pale {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+}
+html[lang="en"] #checkout-success .uppercase [data-i18n] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+html[lang="en"] #checkout-modal [data-i18n="chkRemark"],
+html[lang="en"] #checkout-modal [data-i18n="formPayHelp"],
+html[lang="en"] #checkout-modal [data-i18n="formPayPrivacy"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+html[lang="en"] #checkout-order-id,
+html[lang="en"] #fps-id,
+html[lang="en"] #success-order-id {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+html[lang="en"] #shop h3[data-i18n] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.1em !important;
+  font-style: normal !important;
+}
+html[lang="en"] #shop [data-i18n="p1Desc1"],
+html[lang="en"] #shop [data-i18n="p1Desc2"],
+html[lang="en"] #shop [data-i18n="p2Desc1"],
+html[lang="en"] #shop [data-i18n="p2Desc2"],
+html[lang="en"] #story p[data-i18n],
+html[lang="en"] #collaboration [data-i18n="collabBody"],
+html[lang="en"] #checkout-success [data-i18n="successBody"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.75;
+}
+html[lang="en"] #shop [data-i18n="p1Price"],
+html[lang="en"] #shop [data-i18n="p2Price"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+html[lang="en"] #checkout-modal input:not([type="hidden"]):not([type="file"]),
+html[lang="en"] #checkout-modal textarea {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+html[lang="en"] #order-submit-status,
+html[lang="en"] #payment-proof-error,
+html[lang="en"] #payment-proof-filename {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+html[lang="en"] #checkout-summary {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+html[lang="en"] #cart-items p.text-sm {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.06em !important;
+}
+html[lang="en"] footer [data-i18n="footerPolicy"],
+html[lang="en"] footer [data-i18n="footerRights"] {
+  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+}
+
+/* Hero layout — 4 evenly spaced parts, wordmark stays anchored across languages.
+   Structure:
+     [eyebrow]   ──┐
+     [wordmark]    │  consistent gap between each
+     [tagline +    │  (tagline group is 1 visual block — its two lines
+      sub]         │   sit close together, but the group as a whole
+     [CTA]       ──┘   gets the same gap as the others)
+*/
+.hero-stack {
+  gap: clamp(2rem, 6vh, 3.5rem);
+}
+.hero-tagline-group {
+  gap: 0.5rem;
+}
+
+/* Reserve a minimum height in each slot so switching EN ↔ 中文 doesn't
+   shift the wordmark. Heights fit the larger of the two languages. */
+#home [data-i18n="heroEyebrow"] {
+  min-height: 1.25em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#home [data-i18n="heroTagline"] {
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#home [data-i18n="heroSub"] {
+  min-height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  #home [data-i18n="heroTagline"] { min-height: 4rem; }
+  #home [data-i18n="heroSub"]     { min-height: 2rem; }
+}
+
+/* Checkout modal: lock background scroll, keep modal scrollable */
+body.checkout-open {
+  overflow: hidden;
+}
+
+/* Form input autofill — keep the cream look on Chrome */
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset;
+  -webkit-text-fill-color: #2C2416;
+  caret-color: #2C2416;
+}
+
+/* Checkout summary pre-block stays in brand serif */
+#checkout-summary {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+}
