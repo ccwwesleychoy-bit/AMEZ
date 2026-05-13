@@ -22,7 +22,7 @@
   <link rel="manifest" href="site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Serif+TC:wght@300;400&family=Noto+Sans+TC:wght@300;400;500&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -40,18 +40,21 @@
             amber:         '#C4924A',
             blush:         '#B8909A',
           },
+          /* Keep in sync with styles.css :root font variables. English uses
+             Raleway across the site; Traditional Chinese uses Noto Sans TC. */
           fontFamily: {
-            serif: ['Cormorant Garamond', 'Noto Serif TC', 'Georgia', 'serif'],
-            display: ['Raleway', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'Arial', 'sans-serif'],
+            sans: ['Raleway', 'Noto Sans TC', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'Arial', 'sans-serif'],
+            serif: ['Raleway', 'Noto Sans TC', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'Arial', 'sans-serif'],
+            display: ['Raleway', 'Noto Sans TC', 'ui-sans-serif', 'system-ui', 'Helvetica Neue', 'Arial', 'sans-serif'],
           },
         }
       }
     }
   </script>
   <!-- Site CSS: edit styles.css only (single source of truth). Bump ?v= after changes. -->
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=17" />
 </head>
-<body class="bg-cream text-brown font-serif" translate="no">
+<body class="bg-cream text-brown" translate="no">
 
   <!-- CART OVERLAY -->
   <div id="cart-overlay" class="fixed inset-0 bg-brown/20 z-40 hidden" aria-hidden="true"></div>
@@ -65,7 +68,7 @@
 
     <div id="cart-items" class="flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden px-8 py-2" aria-live="polite"></div>
 
-    <div class="px-8 py-6 border-t border-cream-border">
+    <div class="shrink-0 px-8 py-6 border-t border-cream-border">
 
       <!-- Free shipping progress -->
       <div id="cart-progress" class="hidden mb-5">
@@ -92,6 +95,11 @@
       </div>
 
       <button id="btn-checkout" class="w-full py-3.5 border border-brown text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream transition-colors duration-300 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brown" data-i18n="checkout">Checkout</button>
+
+      <div class="amez-cart-policy-hint mt-4 pt-3 border-t border-cream-border/60">
+        <p class="amez-cart-policy-hint__line" data-i18n="policyShopShort1">HK delivery via SF Express; remote surcharges are not included (per SF terms).</p>
+        <p class="amez-cart-policy-hint__line" data-i18n="policyShopShort2">We ship within 5 business days after order confirmed (excluding public holidays).</p>
+      </div>
     </div>
   </aside>
 
@@ -135,7 +143,7 @@
         <p class="text-sm tracking-[0.38em] uppercase text-brown-mid" data-i18n="heroEyebrow">Morning Ritual</p>
         <h1 class="wordmark">AMEZ</h1>
         <div class="hero-tagline-group flex flex-col items-center w-full">
-          <p class="text-2xl md:text-3xl italic tracking-[0.06em] leading-relaxed text-brown" data-i18n="heroTagline">Good Morning, Beautifully Simple.</p>
+          <p class="text-2xl md:text-3xl tracking-[0.06em] leading-relaxed text-brown" data-i18n="heroTagline">Good Morning, Beautifully Simple.</p>
           <p class="text-base text-brown-mid tracking-[0.04em] leading-relaxed" data-i18n="heroSub">Single-origin drip coffee, crafted for quiet mornings.</p>
         </div>
         <a href="#shop" class="inline-block border border-brown/60 px-12 py-3.5 text-xs tracking-[0.32em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="heroCta">Explore the Collection</a>
@@ -310,8 +318,8 @@
 
             <!-- Order Summary -->
             <div class="border-b border-cream-border pb-6 mb-6">
-              <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-3" data-i18n="chkOrderSummary">Order Summary</div>
-              <pre id="checkout-summary" class="whitespace-pre-wrap text-sm leading-[1.85] text-brown-mid font-serif tracking-[0.02em]"></pre>
+              <div id="checkout-summary-heading" class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-3" data-i18n="chkOrderSummary">Order Summary</div>
+              <div id="checkout-summary" class="whitespace-pre-wrap text-sm leading-[1.85] text-brown-mid tracking-[0.02em]" role="region" aria-labelledby="checkout-summary-heading"></div>
               <p id="checkout-free-shipping-note" class="hidden mt-4 border border-cream-border bg-cream-dark/50 px-4 py-3 text-xs leading-relaxed tracking-[0.04em] text-brown-mid"></p>
             </div>
 
@@ -326,6 +334,12 @@
 
             <!-- Remark -->
             <p class="text-xs tracking-[0.04em] leading-relaxed text-brown-mid bg-cream-dark border border-cream-border px-4 py-3 mb-6" data-i18n="chkRemark">Please include the Order ID in the transfer remark.</p>
+
+            <div class="mb-6 space-y-2.5 border border-cream-border bg-cream-dark/30 px-4 py-3">
+              <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipSf">HK delivery via SF Express; remote surcharges are not included (per SF terms).</p>
+              <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipDispatch">We ship within 5 business days after order confirmed (excluding public holidays).</p>
+              <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipFlavor">We recommend enjoying within 45 days of receipt for best flavor.</p>
+            </div>
 
             <!-- Payment methods -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
@@ -422,7 +436,7 @@
   <!-- data-cfasync="false" keeps execution order under Cloudflare Rocket Loader (otherwise app.js can run before i18n.js and break the cart). -->
   <!-- Bump ?v= on styles + scripts when you deploy so caches pick up changes. -->
   <script data-cfasync="false" src="config.js?v=4"></script>
-  <script data-cfasync="false" src="i18n.js?v=4"></script>
+  <script data-cfasync="false" src="i18n.js?v=10"></script>
   <script data-cfasync="false" src="app.js?v=4"></script>
 </body>
 </html>

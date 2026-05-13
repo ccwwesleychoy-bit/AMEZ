@@ -1,11 +1,26 @@
 /* Layout + components — single source of truth (loaded from index.html).
-   Fonts are loaded once via the Google Fonts <link> in index.html (no @import here). */
+ *
+ * 字型：由 index.html 的 Google Fonts 載入（Raleway、Noto Sans TC）。
+ * 英文全站使用 Raleway；繁中全站使用 Noto Sans TC。透過字重、字距、
+ * 大小寫與顏色建立層級，不混用第三套正文/標題字型。
+ *
+ * Tailwind Play CDN v4：Preflight 會在 * 上設定預設字族；下方 base rule
+ * 會強制所有元素繼承 html/body 字型，避免新增段落又漏回系統 sans。
+ */
 
-*, *::before, *::after {
+:root {
+  --font-en-amez: 'Raleway', 'Noto Sans TC', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  --font-display-amez: var(--font-en-amez);
+  --font-zh-sans-amez: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+}
+
+*, *::before, *::after, ::backdrop, ::file-selector-button {
   box-sizing: border-box;
+  font-family: inherit;
 }
 
 html {
+  font-family: var(--font-en-amez);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   /* Site-wide text scale — nudges every rem-based size up ~12.5% for better
@@ -20,16 +35,16 @@ html {
 }
 
 body {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-family: var(--font-en-amez);
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: lining-nums;
   font-feature-settings: "lnum" 1;
 }
 
-/* Wordmark — Raleway thin (MINI COFFEE display style), cream layout unchanged */
+/* Wordmark — Raleway thin, wide tracking */
 .wordmark {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 100;
   font-size: clamp(76px, 15.2vw, 172px);
   letter-spacing: 0.22em;
@@ -39,20 +54,20 @@ body {
 
 /* Nav + footer logo */
 .logo-text {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 300;
   letter-spacing: 0.32em;
 }
 
-/* Product names get a clearer hierarchy without losing the soft AM22 feel. */
+/* Product names */
 #shop h3[data-i18n] {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
 }
 
-/* Language switcher — bumped to 12.5px for readability */
+/* Language switcher */
 .lang-btn {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-family: var(--font-display-amez);
   font-weight: 300;
   font-size: 12.5px;
   letter-spacing: 0.22em;
@@ -91,6 +106,29 @@ body {
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Cart drawer — shipping note under Checkout (small) */
+#cart-drawer .amez-cart-policy-hint__line {
+  margin: 0 0 0.35rem 0;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: 0.625rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: #A08060;
+}
+#cart-drawer .amez-cart-policy-hint__line:last-child {
+  margin-bottom: 0;
+}
+
+#checkout-modal .amez-checkout-policy-line {
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+  color: #6B5540;
+}
+
 /* Smooth image hover (desktop / pointer devices only — avoids sticky-hover on touch) */
 @media (hover: hover) and (pointer: fine) {
   article img {
@@ -113,7 +151,7 @@ section {
 
 /* Story decorative numerals */
 .story-deco {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 200;
   font-size: clamp(48px, 10vw, 100px);
   letter-spacing: 0.22em;
@@ -336,14 +374,14 @@ html[lang="zh-Hant"] #cart-items .amez-cart-title,
 html[lang="zh-Hant"] #cart-items .amez-cart-meta,
 html[lang="zh-Hant"] #cart-items .amez-cart-remove,
 html[lang="zh-Hant"] #cart-items .amez-cart-empty {
-  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 300;
 }
 html[lang="en"] #cart-items .amez-cart-title,
 html[lang="en"] #cart-items .amez-cart-meta,
 html[lang="en"] #cart-items .amez-cart-remove,
 html[lang="en"] #cart-items .amez-cart-empty {
-  font-family: Raleway, ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
 }
 
@@ -389,9 +427,9 @@ html[lang="en"] #cart-items .amez-cart-empty {
   isolation: isolate;
 }
 
-/* Hero tagline — Chinese gets its own voice: clean sans, no italic */
+/* Hero tagline — 正體，不斜體（中英一致） */
 html[lang="zh-Hant"] [data-i18n="heroTagline"] {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 300;
   font-style: normal;
   font-size: clamp(18px, 3.2vw, 26px);
@@ -426,13 +464,13 @@ html[lang="zh-Hant"] #collaboration div.mt-8 > span.text-brown-pale,
 html[lang="zh-Hant"] footer #contact-phone,
 html[lang="zh-Hant"] footer #contact-email,
 html[lang="zh-Hant"] footer nav > span.text-brown-pale {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 300;
 }
 
 /* Trust strip — short Chinese labels need sans + medium weight at small size */
 html[lang="zh-Hant"] [data-i18n^="trust"] {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 500;
   font-size: 0.8125rem;
   letter-spacing: 0.1em !important;
@@ -440,18 +478,18 @@ html[lang="zh-Hant"] [data-i18n^="trust"] {
 }
 
 html[lang="zh-Hant"] #shop h3[data-i18n] {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 500;
 }
 
 /* Cart lines + progress — filled by app.js (no data-i18n) */
 html[lang="zh-Hant"] .font-zh-sans {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 300;
 }
 
 html[lang="zh-Hant"] #checkout-summary {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+  font-family: var(--font-zh-sans-amez) !important;
   font-weight: 300;
 }
 
@@ -459,21 +497,21 @@ html[lang="zh-Hant"] #checkout-free-shipping-note,
 html[lang="zh-Hant"] #order-submit-status,
 html[lang="zh-Hant"] #payment-proof-error,
 html[lang="zh-Hant"] #payment-proof-filename {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 300;
 }
 
 html[lang="zh-Hant"] #checkout-modal input:not([type="hidden"]):not([type="file"]),
 html[lang="zh-Hant"] #checkout-modal textarea {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-family: var(--font-zh-sans-amez);
   font-weight: 400;
 }
 
-/* Checkout helper copy — explicit so Tailwind body font-serif never wins */
+/* Checkout helper copy — 明確指定，避免被其他全域規則覆蓋 */
 html[lang="zh-Hant"] #checkout-modal [data-i18n="chkRemark"],
 html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayHelp"],
 html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayPrivacy"] {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+  font-family: var(--font-zh-sans-amez) !important;
   font-weight: 300;
   letter-spacing: 0.05em !important;
   text-transform: none;
@@ -482,7 +520,7 @@ html[lang="zh-Hant"] #checkout-modal [data-i18n="formPayPrivacy"] {
 html[lang="zh-Hant"] #checkout-order-id,
 html[lang="zh-Hant"] #fps-id,
 html[lang="zh-Hant"] #success-order-id {
-  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif !important;
+  font-family: var(--font-zh-sans-amez) !important;
   font-weight: 400;
   letter-spacing: 0.04em;
 }
@@ -493,14 +531,14 @@ html[lang="zh-Hant"] [data-i18n="successBody"] {
 
 /* English — prose; UI caps unified (same as product meta: p1Sub / p2Meta) */
 html[lang="en"] #home [data-i18n="heroTagline"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: var(--font-display-amez) !important;
   font-weight: 300 !important;
-  font-style: italic !important;
+  font-style: normal !important;
   letter-spacing: 0.06em !important;
 }
 html[lang="en"] #home [data-i18n="heroSub"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 300;
+  font-family: var(--font-display-amez);
+  font-weight: 400;
   letter-spacing: 0.04em;
   font-style: normal;
 }
@@ -509,7 +547,7 @@ html[lang="en"] .lang-btn,
 html[lang="en"] footer nav a[data-i18n],
 html[lang="en"] footer #contact-phone,
 html[lang="en"] footer #contact-email {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.12em;
 }
@@ -522,47 +560,47 @@ html[lang="en"] footer #contact-email {
 }
 html[lang="en"] #collaboration a[href^="mailto:"],
 html[lang="en"] #collab-whatsapp {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.06em;
 }
 html[lang="en"] a[data-i18n="heroCta"],
 html[lang="en"] #shop article button[data-i18n="addToCart"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.2em;
 }
 html[lang="en"] #cart-items .text-xs.uppercase,
 html[lang="en"] #cart-items p.text-\[11px\].uppercase,
 html[lang="en"] #cart-items button.text-\[10px\].uppercase {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.12em;
 }
 html[lang="en"] #cart-progress-text {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.1em;
 }
 html[lang="en"] #checkout-free-shipping-note {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.03em;
 }
 html[lang="en"] #story p.text-xs.uppercase.text-brown-pale {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.14em;
 }
 html[lang="en"] #checkout-success .uppercase [data-i18n] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.12em;
 }
 html[lang="en"] #checkout-modal [data-i18n="chkRemark"],
 html[lang="en"] #checkout-modal [data-i18n="formPayHelp"],
 html[lang="en"] #checkout-modal [data-i18n="formPayPrivacy"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 300;
   letter-spacing: 0.04em;
   text-transform: none;
@@ -570,60 +608,56 @@ html[lang="en"] #checkout-modal [data-i18n="formPayPrivacy"] {
 html[lang="en"] #checkout-order-id,
 html[lang="en"] #fps-id,
 html[lang="en"] #success-order-id {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.06em;
 }
 html[lang="en"] #shop h3[data-i18n] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: var(--font-display-amez) !important;
   font-weight: 400 !important;
   letter-spacing: 0.1em !important;
   font-style: normal !important;
 }
-html[lang="en"] #shop [data-i18n="p1Desc1"],
-html[lang="en"] #shop [data-i18n="p1Desc2"],
-html[lang="en"] #shop [data-i18n="p2Desc1"],
-html[lang="en"] #shop [data-i18n="p2Desc2"],
 html[lang="en"] #story p[data-i18n],
 html[lang="en"] #collaboration [data-i18n="collabBody"],
 html[lang="en"] #checkout-success [data-i18n="successBody"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 300;
+  font-family: var(--font-display-amez);
+  font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 1.75;
 }
 html[lang="en"] #shop [data-i18n="p1Price"],
 html[lang="en"] #shop [data-i18n="p2Price"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.06em;
 }
 html[lang="en"] #checkout-modal input:not([type="hidden"]):not([type="file"]),
 html[lang="en"] #checkout-modal textarea {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.03em;
 }
 html[lang="en"] #order-submit-status,
 html[lang="en"] #payment-proof-error,
 html[lang="en"] #payment-proof-filename {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 400;
   letter-spacing: 0.04em;
 }
 html[lang="en"] #checkout-summary {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 300;
+  font-family: var(--font-display-amez);
+  font-weight: 400;
   letter-spacing: 0.03em;
 }
 html[lang="en"] #cart-items p.text-sm {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: var(--font-display-amez) !important;
   font-weight: 400 !important;
   letter-spacing: 0.06em !important;
 }
 html[lang="en"] footer [data-i18n="footerPolicy"],
 html[lang="en"] footer [data-i18n="footerRights"] {
-  font-family: 'Raleway', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-display-amez);
   font-weight: 300;
   letter-spacing: 0.06em;
 }
@@ -681,7 +715,55 @@ textarea:-webkit-autofill {
   caret-color: #2C2416;
 }
 
-/* Checkout summary pre-block stays in brand serif */
+/* 訂單摘要區塊：與 Cart / product meta 使用同一組 Raleway */
 #checkout-summary {
-  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-family: var(--font-display-amez);
+}
+
+/* Final typography lock.
+   These English content blocks should match product-name/meta typography
+   (Raleway), even if Tailwind CDN injects utilities after this file. */
+html[lang="en"] #home [data-i18n="heroSub"],
+html[lang="en"] #story [data-i18n="story1"],
+html[lang="en"] #story [data-i18n="story2"],
+html[lang="en"] #story [data-i18n="story3"],
+html[lang="en"] #collaboration [data-i18n="collabBody"],
+html[lang="en"] #cart-drawer .amez-cart-policy-hint__line,
+html[lang="en"] #checkout-modal .amez-checkout-policy-line,
+html[lang="en"] #checkout-free-shipping-note,
+html[lang="en"] #checkout-summary,
+html[lang="en"] #checkout-modal [data-i18n="chkRemark"],
+html[lang="en"] #checkout-modal [data-i18n="formPayHelp"],
+html[lang="en"] #checkout-modal [data-i18n="formPayPrivacy"],
+html[lang="en"] #checkout-success [data-i18n="successBody"] {
+  font-family: var(--font-display-amez) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
+/* Product description copy matches product-name/meta typography (Raleway). */
+html[lang="en"] #shop [data-i18n="p1Desc1"],
+html[lang="en"] #shop [data-i18n="p1Desc2"],
+html[lang="en"] #shop [data-i18n="p2Desc1"],
+html[lang="en"] #shop [data-i18n="p2Desc2"] {
+  font-family: var(--font-display-amez) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
+/* English UI labels stay on Raleway. */
+html[lang="en"] #cart-title,
+html[lang="en"] #checkout-title,
+html[lang="en"] #checkout-summary-heading,
+html[lang="en"] #checkout-modal [data-i18n="chkOrder"],
+html[lang="en"] #checkout-modal [data-i18n="chkFps"],
+html[lang="en"] #checkout-modal [data-i18n="chkPayMe"],
+html[lang="en"] #checkout-modal [data-i18n="copy"],
+html[lang="en"] #cart-drawer [data-i18n="cartSubtotal"],
+html[lang="en"] #cart-drawer [data-i18n="cartShipping"],
+html[lang="en"] #cart-drawer [data-i18n="cartTotal"],
+html[lang="en"] #cart-drawer [data-i18n="checkout"],
+html[lang="en"] #cart-drawer [data-i18n="cartClose"] {
+  font-family: var(--font-display-amez) !important;
+  font-weight: 300 !important;
 }
