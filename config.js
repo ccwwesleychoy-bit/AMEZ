@@ -3,8 +3,12 @@ window.SHOP_CONFIG = {
   currencyLabel: "HK$",
 
   // Free shipping when subtotal reaches this amount (HK$)
-  freeShippingAtAmount: 240,
+  freeShippingAtAmount: 250,
+  /** Below free-ship: default shipping (HK$) */
   shippingFee: 30,
+  /** When cart subtotal is exactly this (HK$), use reduced shipping instead of shippingFee */
+  shippingDiscountSubtotal: 240,
+  shippingFeeAtDiscountSubtotal: 10,
 
   // Payment
   payMeUrl: "https://payme.hsbc/996976ef1a4840e397b5d218c81a662a",
@@ -18,5 +22,5 @@ window.SHOP_CONFIG = {
 
   // Google Apps Script Web App — receives order + payment proof image
   orderEndpoint:
-    "https://script.google.com/macros/s/AKfycbw-TRIuKjJU0aoqUb_knTEmnYL64Nnf1VjUnuk5MkJBQWnfc0_egWAjYP8kFTOOfyALpQ/exec",
+    "https://script.google.com/macros/s/AKfycbw5sPHhsLdPpBXgqS1iCYNAylLZmuA2GM5MhWad8Y-3UN9WKs3mWs23Hc74DP-p9jgJJg/exec",
 };

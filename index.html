@@ -99,6 +99,7 @@
       <div class="amez-cart-policy-hint mt-4 pt-3 border-t border-cream-border/60">
         <p class="amez-cart-policy-hint__line" data-i18n="policyShopShort1">HK delivery via SF Express; remote surcharges are not included (per SF terms).</p>
         <p class="amez-cart-policy-hint__line" data-i18n="policyShopShort2">We ship within 5 business days after order confirmed (excluding public holidays).</p>
+        <p class="amez-cart-policy-hint__line" data-i18n="policyShipFlavor">We recommend enjoying within 60 days of receipt for best flavor.</p>
       </div>
     </div>
   </aside>
@@ -338,7 +339,7 @@
             <div class="mb-6 space-y-2.5 border border-cream-border bg-cream-dark/30 px-4 py-3">
               <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipSf">HK delivery via SF Express; remote surcharges are not included (per SF terms).</p>
               <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipDispatch">We ship within 5 business days after order confirmed (excluding public holidays).</p>
-              <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipFlavor">We recommend enjoying within 45 days of receipt for best flavor.</p>
+              <p class="m-0 amez-checkout-policy-line" data-i18n="policyShipFlavor">We recommend enjoying within 60 days of receipt for best flavor.</p>
             </div>
 
             <!-- Payment methods -->
@@ -380,10 +381,17 @@
                 <textarea name="address" required rows="2" autocomplete="street-address" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors resize-none"></textarea>
               </label>
 
-              <label class="block">
-                <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formEmail">Email (optional)</span>
-                <input name="email" type="email" inputmode="email" autocomplete="email" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
-              </label>
+              <div class="space-y-2.5">
+                <label class="block">
+                  <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formEmail">Email (optional)</span>
+                  <input name="email" type="email" inputmode="email" autocomplete="email" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                </label>
+
+                <label class="block">
+                  <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formRemarks">Remarks (if any)</span>
+                  <textarea name="remarks" rows="1" autocomplete="off" class="mt-1.5 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm leading-snug text-brown transition-colors resize-none"></textarea>
+                </label>
+              </div>
 
               <!-- Payment proof upload -->
               <div class="border border-cream-border bg-cream-dark/40 px-5 py-5 mt-2">
@@ -435,8 +443,8 @@
 
   <!-- data-cfasync="false" keeps execution order under Cloudflare Rocket Loader (otherwise app.js can run before i18n.js and break the cart). -->
   <!-- Bump ?v= on styles + scripts when you deploy so caches pick up changes. -->
-  <script data-cfasync="false" src="config.js?v=4"></script>
-  <script data-cfasync="false" src="i18n.js?v=10"></script>
-  <script data-cfasync="false" src="app.js?v=4"></script>
+  <script data-cfasync="false" src="config.js?v=5"></script>
+  <script data-cfasync="false" src="i18n.js?v=12"></script>
+  <script data-cfasync="false" src="app.js?v=6"></script>
 </body>
 </html>

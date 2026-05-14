@@ -4,9 +4,15 @@
 
   const cfg = window.SHOP_CONFIG || {};
   const currency = cfg.currencyLabel || "HK$";
-  const rawFree = Number(cfg.freeShippingAtAmount || 240);
-  const freeAtAmount = Number.isFinite(rawFree) && rawFree > 0 ? rawFree : 240;
+  const rawFree = Number(cfg.freeShippingAtAmount || 250);
+  const freeAtAmount = Number.isFinite(rawFree) && rawFree > 0 ? rawFree : 250;
   const shipFee = Number(cfg.shippingFee || 30);
+  const rawDiscSub = Number(cfg.shippingDiscountSubtotal);
+  const discountSubtotal =
+    Number.isFinite(rawDiscSub) && rawDiscSub > 0 && rawDiscSub < freeAtAmount ? rawDiscSub : 240;
+  const rawDiscFee = Number(cfg.shippingFeeAtDiscountSubtotal);
+  const shipFeeAtDiscount =
+    Number.isFinite(rawDiscFee) && rawDiscFee >= 0 ? rawDiscFee : 10;
 
   const PRODUCTS = {
     nutty: {
@@ -175,7 +181,9 @@
   function shipping(sub) {
     const s = Number(sub) || 0;
     if (s <= 0) return 0;
-    return s >= freeAtAmount ? 0 : shipFee;
+    if (s >= freeAtAmount) return 0;
+    if (s === discountSubtotal) return shipFeeAtDiscount;
+    return shipFee;
   }
   function grandTotal() {
     const sub = subtotal();
@@ -647,7 +655,7 @@
       whatsapp: phone,
       address: (form.querySelector('[name="address"]') || {}).value || "",
       email:   (form.querySelector('[name="email"]')   || {}).value || "",
-      note:    "",
+      note:    (form.querySelector('[name="remarks"]') || {}).value || "",
       summary: $("order-summary-field").value,
       paymentProofBase64:   state.paymentProof.base64,
       paymentProofMime:     state.paymentProof.mime,
