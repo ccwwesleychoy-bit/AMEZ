@@ -4,11 +4,11 @@ window.SHOP_CONFIG = {
 
   // Free shipping when subtotal reaches this amount (HK$)
   freeShippingAtAmount: 250,
-  /** Below free-ship: default shipping (HK$) */
+  /** Standard shipping below discount tier (HK$) */
   shippingFee: 30,
-  /** When cart subtotal is exactly this (HK$), use reduced shipping instead of shippingFee */
-  shippingDiscountSubtotal: 240,
-  shippingFeeAtDiscountSubtotal: 10,
+  /** From this subtotal (HK$), deduct shippingDiscountAmount from standard shipping (until free-ship) */
+  shippingDiscountFromAmount: 200,
+  shippingDiscountAmount: 20,
 
   // Payment
   payMeUrl: "https://payme.hsbc/996976ef1a4840e397b5d218c81a662a",

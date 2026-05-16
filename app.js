@@ -7,12 +7,11 @@
   const rawFree = Number(cfg.freeShippingAtAmount || 250);
   const freeAtAmount = Number.isFinite(rawFree) && rawFree > 0 ? rawFree : 250;
   const shipFee = Number(cfg.shippingFee || 30);
-  const rawDiscSub = Number(cfg.shippingDiscountSubtotal);
-  const discountSubtotal =
-    Number.isFinite(rawDiscSub) && rawDiscSub > 0 && rawDiscSub < freeAtAmount ? rawDiscSub : 240;
-  const rawDiscFee = Number(cfg.shippingFeeAtDiscountSubtotal);
-  const shipFeeAtDiscount =
-    Number.isFinite(rawDiscFee) && rawDiscFee >= 0 ? rawDiscFee : 10;
+  const rawDiscFrom = Number(cfg.shippingDiscountFromAmount);
+  const shipDiscountFrom =
+    Number.isFinite(rawDiscFrom) && rawDiscFrom > 0 && rawDiscFrom < freeAtAmount ? rawDiscFrom : 200;
+  const rawDiscAmt = Number(cfg.shippingDiscountAmount);
+  const shipDiscountAmt = Number.isFinite(rawDiscAmt) && rawDiscAmt >= 0 ? rawDiscAmt : 20;
 
   const PRODUCTS = {
     nutty: {
@@ -182,7 +181,7 @@
     const s = Number(sub) || 0;
     if (s <= 0) return 0;
     if (s >= freeAtAmount) return 0;
-    if (s === discountSubtotal) return shipFeeAtDiscount;
+    if (s >= shipDiscountFrom) return Math.max(0, shipFee - shipDiscountAmt);
     return shipFee;
   }
   function grandTotal() {
